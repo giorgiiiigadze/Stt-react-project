@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { getAudios } from "../services/api";
 
 export default function useFetchAudios() {
@@ -6,45 +6,49 @@ export default function useFetchAudios() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const isLoggedIn = useRef(false);
+  const [isLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
 
   useEffect(() => {
-    isLoggedIn.current = !!localStorage.getItem("access_token");
-  }, []);
+    let mounted = true;
 
-  useEffect(() => {
-    if (!isLoggedIn.current) {
+    if (!isLoggedIn) {
       setLoading(false);
-      return;
+      return () => { mounted = false; };
     }
 
     const loadAudios = async () => {
       try {
         // Artificial delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         const audiosData = await getAudios();
+        if (!mounted) return;
         setAudios(audiosData);
       } catch (err) {
-        if (err.status === 403) {
+        if (!mounted) return;
+        if (err?.status === 403) {
           setError("Not authorized");
-        } else if (err.status === 429) {
+        } else if (err?.status === 429) {
           setError("Way too many requests were sent");
         } else {
           setError("Failed to load audios...");
         }
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     loadAudios();
-  }, []);
+
+    return () => {
+      mounted = false;
+    };
+  }, [isLoggedIn]);
 
   return {
     audios,
     loading,
     error,
-    isLoggedIn: isLoggedIn.current,
+    isLoggedIn,
   };
 }

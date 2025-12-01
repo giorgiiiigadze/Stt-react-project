@@ -86,7 +86,7 @@ export default function Sidebar() {
             <>
               {loading ? (
                 <Skeleton 
-                  width={100}
+                  width={255}
                   height={14}
                   style={{ borderRadius: '20px' }}
                   baseColor="#292929"
@@ -110,7 +110,7 @@ export default function Sidebar() {
                       key={audio.id}
                     >
                       <span>
-                        <AudioStatus status={audio.status} padding={"8"} />
+                        <AudioStatus status={audio.status} padding={"6"} />
                         {shrinkedTitle(audio)}
                       </span>
                       <button className="audio-more-btn">

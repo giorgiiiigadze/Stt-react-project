@@ -5,7 +5,6 @@ import Tooltip from "@mui/material/Tooltip";
 export default function AudioTable() {
   const { columns, rows } = useTable();
 
-  // Define grid template based on column widths
   const gridTemplate = columns.map(col => col.width + "px").join(" ");
 
   return (
@@ -14,7 +13,6 @@ export default function AudioTable() {
         className="table-grid"
         style={{ gridTemplateColumns: gridTemplate }}
       >
-        {/* HEADER */}
         <div className="table-header">
           {columns.map(col => (
             <Tooltip
@@ -30,7 +28,6 @@ export default function AudioTable() {
           ))}
         </div>
 
-        {/* ROWS */}
         {rows.map(row => (
           <div key={row.id} className="table-row">
             {columns.map(col => (

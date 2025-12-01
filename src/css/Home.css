@@ -1,8 +1,6 @@
 .container {
   width: 100%;
   height: auto;
-  padding: 0;
-  margin: 0;
   box-sizing: border-box;
 }
 
@@ -32,39 +30,25 @@
   height: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 50px;
+  .no-audios-message{
+    width: 100%;
+    height: auto;
+    article{
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
+.liked-audios-container{
+  margin: -20px;
 }
 
 .audios-scroll-container {
   display: flex;
   gap: 14px;
   overflow-x: auto;
-  padding: 10px;
+  padding: 10px; 
   scrollbar-width: none;
-}
-
-.audio-card {
-  min-width: 140px;
-  background-color: #252525;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 22px;
-  border: 0.5px solid transparent;
-  text-decoration: none;
-  color: #fff;
-  &:hover{
-    border: 0.1px solid #303030;
-  }
-}
-.card-upper{
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.audio-title{
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.2;
 }

@@ -1,67 +1,70 @@
 import '../css/AudioDetails.css';
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import Header from "../components/Header";
 
-import { getAudios } from "../services/api";
+import useFetchAudios from "../hooks/FetchHook";
 import AudioStatus from '../components/AudioStatus';
-import AudioTable from '../components/Table/AudioTables';
+
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 
 export default function AudioDetails() {
   const { id } = useParams();
-  const [audio, setAudio] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { audios, loading, error, isLoggedIn } = useFetchAudios();
 
-  useEffect(() => {
-    const loadAudio = async () => {
-      try {
-        const audiosData = await getAudios();
-
-        const selected = audiosData.find(a => String(a.id) === String(id));
-
-        if (!selected) {
-          setError("Audio not found");
-        } else {
-          setAudio(selected);
-        }
-
-      } catch (err) {
-        if (err.status === 403) {
-          setError("Not authorized");
-        } else {
-          setError("Failed to load audio");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadAudio();  
-  }, [id]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (!audio) return <p>Audio not found</p>;
+  const audio = audios?.find(a => String(a.id) === String(id));
 
   return (
-    <div className="audio-details-container">
-      <Header></Header>
-        <main className='audio-details-main'>
+    <>
+    <Header audio={audio} loading={loading} />
 
-            <div className="audio_title">
-              <AudioStatus status={audio.status} padding={"20"} />
-              <h1>{audio.file_title}</h1>
-            </div>
-            <div className="audio-details">
-              {/* <AudioTable></AudioTable> */}
-            </div>
-            <div className="audio-transcription"></div>
-            <div className="audio-comment-list">
-            </div>
-            <div className="add-comment">
-            </div>
+    <div className="audio-details-container">
+
+      {!isLoggedIn ? (
+        <p>Not logged in</p>
+      ) : loading ? (
+        <main className='audio-details-main'>
+            <div className="audio-title">
+              <Skeleton 
+                  width={16} 
+                  height={16}
+                  style={{ borderRadius: '12px' }}
+                  baseColor="#292929"
+                  highlightColor="#515151ff"
+              />
+              <Skeleton 
+                  width={500} 
+                  height={16}
+                  style={{ borderRadius: '12px' }}
+                  baseColor="#292929"
+                  highlightColor="#515151ff"
+              />
+            </div>     
         </main>
+
+      ) : error ? (
+        <p>{error}</p>
+      ) : !audio ? (
+        <p>Audio not found</p>
+      ) : (
+        <>
+
+          <main className='audio-details-main'>
+            <div className="audio-title">
+              <AudioStatus status={audio.status} padding={"12"} />
+              <div role='h1' className='title'>{audio.file_title}</div>
+            </div>
+
+            <div className="audio-details"></div>
+            <div className="audio-transcription"></div>
+            <div className="audio-comment-list"></div>
+            <div className="add-comment"></div>
+          </main>
+        </>
+      )}
+
     </div>
+    </>
   );
 }

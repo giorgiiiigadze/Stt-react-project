@@ -1,0 +1,38 @@
+.audio-card {
+  min-width: 140px;
+  background-color: #252525;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 0.5px solid transparent;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  &:hover{
+    border: 0.1px solid #303030;
+  }
+}
+.card-upper{
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 4px;
+  .card-status{
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+  }
+  .audio-title{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  svg{
+    width: 18px;
+    height: 18px;
+  }
+}
+

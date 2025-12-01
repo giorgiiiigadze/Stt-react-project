@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 0.5px solid #303030;
-  button{
+  .sidebar-button{
       border: none;
       background-color: transparent;
       cursor: pointer;
@@ -13,5 +13,19 @@
       border-radius: 6px;
       margin: 15px;
       transition: 0.4s ease;
+  }
+  .header-audio-name{
+    display: flex;
+    align-items: center;
+    
+    gap: 6px;
+    columns: #f0efed;
+    height: 24px;
+    padding-inline: 8px;
+    border-radius: 6px;
+    background-color: transparent;
+    &:hover{
+      background-color: #2c2c2b;
+    }
   }
 }
