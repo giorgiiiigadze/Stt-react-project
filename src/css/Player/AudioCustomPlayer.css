@@ -1,0 +1,119 @@
+.audio-player{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: #0202025d;
+}
+.audio-player-title {
+    font-size: 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    .like-unlike-buttons{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        gap: 4px;
+
+        button{
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+            border-radius: 50%;
+            padding: 4px;
+
+            svg{
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+}
+.audio-player-controls{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    background-color: transparent;
+
+    .audio-play-button{
+        padding: 8px;
+        background-color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        color: #000;
+        .input-time{
+            font-size: 10px;
+        }
+        svg{
+            fill: #000;
+        }
+    }
+    .player-input{
+        width: 600px;
+        max-width: 600px;
+        min-width: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        gap: 4px;
+
+        .input-time{
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #c5c5c5bb;
+            font-family: Arial, sans-serif;
+        }
+
+        .player {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 3px;
+            background: #444;
+            outline: none;
+        }
+
+        .player::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0px;
+            height: 0px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .player::-moz-range-thumb {
+            width: 0px;
+            height: 0px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .player::-ms-thumb {
+            width: 0px;
+            height: 0px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+
+    }
+
+}

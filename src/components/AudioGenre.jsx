@@ -24,8 +24,8 @@ export default function AudioGenre({ genre, padding = 8 }) {
         display: "inline-flex",
         alignItems: "center",
         gap: "6px",
-        backgroundColor: `${bgColor}20`, // light translucent background
-        padding: `${padding / 2}px ${padding}px`, // vertical / horizontal
+        backgroundColor: `${bgColor}20`,
+        padding: `${padding / 2}px ${padding}px`,
         borderRadius: "16px",
         fontSize: "11px",
         fontWeight: 600,
@@ -37,7 +37,7 @@ export default function AudioGenre({ genre, padding = 8 }) {
       <div
         className="audio_genre_dot"
         style={{
-          width: padding,  // fixed size for the dot
+          width: padding,
           height: padding,
           borderRadius: "50%",
           backgroundColor: bgColor,

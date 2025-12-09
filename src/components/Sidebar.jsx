@@ -4,10 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 
 import { useSidebar } from "../contexts/SidebarContext";
 import { useUser } from "../contexts/UserContext";
+import { useAudios } from '../contexts/AudioContext';
 
 import AudioStatus from "./AudioStatus";
 import shrinkedTitle from "./ShrinkedAudioTitle";
-import useFetchAudios from '../hooks/FetchHook';
 
 import Tooltip from "@mui/material/Tooltip";
 import Skeleton from 'react-loading-skeleton';
@@ -17,11 +17,13 @@ import 'react-loading-skeleton/dist/skeleton.css';
 export default function Sidebar() {
   const { isOpen, toggleOpen } = useSidebar();
   const location = useLocation();
-  const { user, userLoading } = useUser();
-
+  const [showAllAudios, setShowAllAudios] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { audios, loading, error, isLoggedIn } = useFetchAudios();
+  const { user, userLoading } = useUser();
+  const { audios, loading, error, isLoggedIn } = useAudios(user);
+
+
 
   function handleLogout() {
     localStorage.removeItem("access_token");
@@ -87,7 +89,7 @@ export default function Sidebar() {
               {loading ? (
                 <Skeleton 
                   width={255}
-                  height={14}
+                  height={10}
                   style={{ borderRadius: '20px' }}
                   baseColor="#292929"
                   highlightColor="#383838ff"
@@ -100,7 +102,7 @@ export default function Sidebar() {
                 <>
                   <div className="audios-names-title">
                     <Tooltip title="Your audios name list" placement="left">
-                      <span>Audio names</span>
+                      <span>Uploaded Audios</span>
                     </Tooltip>
                   </div>
                   {audios.map(audio => (
@@ -110,8 +112,8 @@ export default function Sidebar() {
                       key={audio.id}
                     >
                       <span>
-                        <AudioStatus status={audio.status} padding={"6"} />
-                        {shrinkedTitle(audio)}
+                        <AudioStatus status={audio.status} padding={"8"} />
+                        {shrinkedTitle(audio, 15)}
                       </span>
                       <button className="audio-more-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">

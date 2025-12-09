@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
 import { getAudios } from "../services/api";
+import { useUser } from "../contexts/UserContext";
 
-export default function useFetchAudios() {
+export default function useFetchAudios(userParam) {
   const [audios, setAudios] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [isLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
+  const context = useUser();
+  const effectiveUser = userParam ?? context?.user;
+
+  const isLoggedIn = !!localStorage.getItem("access_token");
 
   useEffect(() => {
     let mounted = true;
 
     if (!isLoggedIn) {
+      setAudios([]);
       setLoading(false);
+      setError("You must be logged in");
       return () => { mounted = false; };
     }
 
@@ -24,13 +30,13 @@ export default function useFetchAudios() {
         const audiosData = await getAudios();
         if (!mounted) return;
         setAudios(audiosData);
+        setError(null);
       } catch (err) {
         if (!mounted) return;
-        if (err?.status === 403) {
-          setError("Not authorized");
-        } else if (err?.status === 429) {
+        else if (err?.status === 429) {
           setError("Way too many requests were sent");
-        } else {
+        }
+        else {
           setError("Failed to load audios...");
         }
       } finally {
@@ -38,12 +44,13 @@ export default function useFetchAudios() {
       }
     };
 
+    setLoading(true);
     loadAudios();
 
     return () => {
       mounted = false;
     };
-  }, [isLoggedIn]);
+  }, [isLoggedIn, effectiveUser]);
 
   return {
     audios,

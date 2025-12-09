@@ -24,8 +24,42 @@
     padding-inline: 8px;
     border-radius: 6px;
     background-color: transparent;
+    .header-audio-name-popup{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      .popup-input{
+        padding: 4px;
+        background-color: #313131;
+        font-size: 13px;
+        border: none;
+      }
+    }
+
     &:hover{
       background-color: #2c2c2b;
     }
   }
+}
+
+.szh-menu {
+  background: #252525;
+  border-radius: 10px;
+  padding: 6px;
+  border: 1px solid #333;
+}
+
+.szh-menu__item {
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: #eaeaea;
+  font-size: 14px;
+}
+
+.szh-menu__item:hover {
+  background: #1e1e1e;
+}
+
+.szh-menu__item.danger {
+  color: #ff5c5c;
 }

@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { useLogin } from "../../hooks/registration_hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const { login, loading, error } = useLogin();
+  const { login, loading, error, isLoggedIn } = useLogin();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
     const result = await login(username, password);
 
     if (result.success) {
-      window.location.href = "/";
+      navigate('/');
     }
   }
-
   return (
     <div className="login-container">
       <div className="login-box">

@@ -8,7 +8,6 @@ import '../css/AudioBox.css'
 function AudioBox({ audio, width, height, borderRadius }) {
     const { isFavorite, loading, toggleFavorite } = useFavoriteAudio(audio.favorite, audio.id);
 
-
     return (
         <Link 
             to={`/audios/${audio.id}`} 
@@ -27,11 +26,14 @@ function AudioBox({ audio, width, height, borderRadius }) {
                 </div>
 
                 <div className="audio-title">
-                    {shrinkedTitle(audio)}
+                    {shrinkedTitle(audio, 15)}
                 </div>
             </section>
             <footer className="card-lower">
-                <button
+                <div className="audio-date">
+                    {new Date(audio.created_at).toLocaleDateString()}
+                </div>
+                {/* <button
                     onClick={(e) => {
                         e.preventDefault();
                         toggleFavorite();
@@ -42,12 +44,12 @@ function AudioBox({ audio, width, height, borderRadius }) {
                         border: "none",
                         cursor: "pointer",
                         fontSize: "20px",
-                        color: isFavorite ? "white" : "gray",
+                        color: isFavorite ? "#616161" : "gray",
                     }}
                     title={isFavorite ? "Remove from favorites" : "Add to favorites"}
                 >
                     {isFavorite ? "★" : "☆"}
-                </button>
+                </button> */}
             </footer>
         </Link>
     );

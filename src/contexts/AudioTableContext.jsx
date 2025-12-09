@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 import useFetchAudios from "../hooks/FetchHook";
 
 import AudioStatus from "../components/AudioStatus";
@@ -7,6 +7,8 @@ import AudioGenre from '../components/AudioGenre'
 const TableContext = createContext({
   columns: [],
   rows: [],
+  loading: false,
+  error: null,
 });
 
 export function useTable() {
@@ -14,16 +16,18 @@ export function useTable() {
 }
 
 export function TableProvider({ children }) {
-  const { audios } = useFetchAudios();
+  const { audios, loading, error } = useFetchAudios();
 
   const columns = [
-    { id: "file_title", label: "Title", width: 360 },
-    { id: "status", label: "Status", width: 100 },
-    { id: "created_at", label: "Created", width: 150 },
-    { id: "audio_ganre", label: "Genre", width: 120 },
+    { id: "file_title", label: "Title", width: 460 },
+    { id: "status", label: "Status", width: 150 },
+    { id: "created_at", label: "Created", width: 250 },
+    { id: "audio_ganre", label: "Genre", width: 200 },
 
-    { id: "transcripted", label: "Transcripted", width: 140 },
-    { id: "favorite", label: "Favorite", width: 120 },
+    { id: "transcripted", label: "Transcripted", width: 250 },
+    { id: "favorite", label: "Favorite", width: 200 },
+    { id: "add_column", label: "+", width: 100 },
+
   ];
 
   const rows =
@@ -37,7 +41,7 @@ export function TableProvider({ children }) {
       favorite: audio.favorite ? "★" : "—",
     })) || [];
 
-  const value = { columns, rows };
+  const value = { columns, rows, loading, error };
 
   return <TableContext.Provider value={value}>{children}</TableContext.Provider>;
 }
