@@ -1,0 +1,37 @@
+.audio-tabs{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 4px;
+}
+
+.audio-tab.active {
+  background-color: #30302e;
+  color: #fff;
+}
+
+.audio-tab{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ada9a3;
+  background-color: transparent;
+  padding-inline: 10px;
+  height: 36px;
+  border-radius: 20px;
+
+  span{
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  svg{
+    display: flex;
+    align-items: center;
+  }
+
+  &:hover{
+    background-color: #30302e;
+  }
+}

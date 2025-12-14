@@ -7,8 +7,6 @@ export const useFavoriteAudio = (initialFavorite, audioId) => {
   const [error, setError] = useState(null);
 
   const toggleFavorite = async (favorite = null) => {
-    console.log("Toggle favourite clicked")
-
     setLoading(true);
     setError(null);
     try {

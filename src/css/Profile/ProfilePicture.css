@@ -1,0 +1,7 @@
+.pfp{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 4px;
+}

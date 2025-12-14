@@ -1,5 +1,3 @@
-const BASE_URL = "http://127.0.0.1:8000";
-
 import { apiRequest } from "./apiHelper";
 
 export const getAudios = () => {
@@ -11,13 +9,26 @@ export const getAllTranscriptedAudios = () =>{
 }
 
 export const uploadAudio = (file_title, file) => {
+  const formData = new FormData();
+  formData.append("file_title", file_title); 
+  formData.append("file", file);
+
+  console.log("Fetching the upload API")
+
   return apiRequest(
-    "/users/api/register/",
+    "/stt/api/audio/upload/",
     "POST",
-    {
-      file_title,
-      file,
-    }
+    formData,
+  )
+}
+
+export const editAudioTitle = (audioId, newTitle) => {
+  console.log("Changing the audio title...")
+
+  return apiRequest(
+    `/stt/api/audio/edit-title/${audioId}/`,
+    "PATCH",
+    { file_title: newTitle }
   );
 };
 

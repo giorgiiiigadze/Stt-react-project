@@ -32,7 +32,7 @@ export default function Home() {
                 <div className='upper-text-container'>
                   <Skeleton 
                     width={200} 
-                    height={10}
+                    height={8}
                     style={{ borderRadius: '22px' }}
                     baseColor="#292929"
                     highlightColor="#515151ff"
@@ -98,14 +98,17 @@ export default function Home() {
                       </p>
                     </div>
                   ) : (
-                    <div style={{maxWidth: '100%'}}>
+
+                    <div style={{maxWidth: '100%', padding: '10px'}}>
                       <p style={{ 
                         fontSize: '12px', 
                         fontWeight: 500, 
                         color: '#ada9a3',
                         display: 'flex',
                         alignItems: 'center'
-                        }}><svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 -960 960 960" width="14px" fill="#ada9a3"><path d="M430-200q38 0 64-26t26-64v-150h120v-80H480v155q-11-8-23.5-11.5T430-380q-38 0-64 26t-26 64q0 38 26 64t64 26ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg><span>Your audios</span></p>
+                        }}><svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 -960 960 960" width="14px" fill="#ada9a3"><path d="M430-200q38 0 64-26t26-64v-150h120v-80H480v155q-11-8-23.5-11.5T430-380q-38 0-64 26t-26 64q0 38 26 64t64 26ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                        <span>Your audios</span>
+                      </p>
                       <div className="audios-scroll-container">
                         {audios.map(audio => (
                           <AudioBox
@@ -142,24 +145,22 @@ export default function Home() {
                       </div>
                     </Tooltip>
                   ) : (
-                    <div style={{maxWidth: '100%'}}>
-                      <Tooltip title="Favourite audios you like.." placement="right">
-                        <p style={{ 
-                          fontSize: '12px', 
-                          fontWeight: 500, 
-                          color: '#ada9a3',
-                          display: 'flex',
-                          alignItems: 'center'
-                          }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 -960 960 960" width="14px" fill="#ada9a3">
-                              <path d="M200-120v-640q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v640L480-240 200-120Zm80-122 200-86 200 86v-518H280v518Zm0-518h400-400Z"/>
-                            </svg>
-                            <span>Your Favourited audios</span>
-                        </p>
-                      </Tooltip>
+
+                    <div style={{maxWidth: '100%', padding: '10px'}}>
+                      <p style={{ 
+                        fontSize: '12px', 
+                        fontWeight: 500, 
+                        color: '#ada9a3',
+                        display: 'flex',
+                        alignItems: 'center'
+                        }}>
+                          <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 -960 960 960" width="14px" fill="#ada9a3">
+                            <path d="M200-120v-640q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v640L480-240 200-120Zm80-122 200-86 200 86v-518H280v518Zm0-518h400-400Z"/>
+                          </svg>
+                          <span>Your Favourited audios</span>
+                      </p>
                       <div className="audios-scroll-container">
-                        {audios
-                          .filter(audio => audio.favorite)
+                        {audios.filter(audio => audio.favorite)
                           .map(audio => (
                             <AudioBox
                               key={audio.id}
@@ -167,6 +168,7 @@ export default function Home() {
                               audio={audio}
                               width={"240px"}
                               height={"180px"}
+                              favouriteButton={true}
                             />
                           ))}
                       </div>

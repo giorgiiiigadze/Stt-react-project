@@ -1,0 +1,94 @@
+.dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.288);
+  transition: 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-box {
+  background-color: #1f1f1f;
+  border: 1.4px solid #383836;
+  padding: 20px 24px;
+  border-radius: 12px;
+
+  width: 90%;
+  max-width: 400px;
+  min-height: 150px;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  overflow-y: auto;
+  z-index: 1010;
+}
+
+
+.dialog-warning{
+  color: #c5c5c5bb;
+}
+
+.dialog-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirm-btn {
+  background-color: transparent;
+  color: #df6257;
+  border: 1px solid #55312e;
+  padding: 8px 14px;
+  padding-inline: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover{
+    background-color: #55312e;
+  }
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 8px 14px;
+  padding-inline: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover{
+    background-color: #333;
+  }
+}
+
+@media (max-width: 430px) {
+  .dialog-box {
+    width: calc(94% - 24px);
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .dialog-warning {
+    line-height: 1.4;
+  }
+
+  .dialog-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .confirm-btn,
+  .cancel-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+}

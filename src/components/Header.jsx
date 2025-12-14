@@ -14,29 +14,28 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 
+import { useNavigate } from "react-router-dom";
+
 import '../css/Header.css';
 
 export default function Header({ audio, loading } = {}) {
   const { toggleOpen } = useSidebar();
 
   const [hovered, setHovered] = useState(false);
+  const sidebarPosition = localStorage.getItem("sidebar_position")
   const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const [file, setFile] = useState(null);
+
+  const navigate = useNavigate();
 
   const title = audio?.file_title;
   const status = audio?.status;
 
-  const handleUpload = () => {
-    if (!file) return alert("No file selected");
-    console.log("Uploading file:", file);
-  };
 
   return (
     <header className="container-header">
       {showUploadDialog && (
         <UploadDialog
           setShowUploadDialog={setShowUploadDialog}
-          handleUpload={handleUpload}
         />
       )}
 
@@ -66,12 +65,12 @@ export default function Header({ audio, loading } = {}) {
         ) : loading ? (
           <div className="header-audio-name">
             <Skeleton width={16} height={16} style={{ borderRadius: '4px' }} baseColor="#292929" highlightColor="#515151ff" />
-            <Skeleton width={200} height={10} style={{ borderRadius: '12px' }} baseColor="#292929" highlightColor="#515151ff" />
+            <Skeleton width={200} height={8} style={{ borderRadius: '12px' }} baseColor="#292929" highlightColor="#515151ff" />
           </div>
         ) : null}
       </div>
 
-      <div>
+      <div style={{display: 'flex'}}>
         <Menu
           menuButton={
             <MenuButton className="edit-home-page-button sidebar-button">
@@ -106,8 +105,9 @@ export default function Header({ audio, loading } = {}) {
 
 
         <Tooltip title="Record or upload" placement="bottom">
-          <button
-            onClick={() => setShowUploadDialog(!showUploadDialog)}
+          <button 
+            // onClick={() => setShowUploadDialog(!showUploadDialog)}
+            onClick={() => navigate('/audio_upload')}
             className="edit-home-page-button sidebar-button"
           >
             <svg

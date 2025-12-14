@@ -7,10 +7,13 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { useFavoriteAudio } from '../../hooks/ToggleFavourite';
 
+import { useToast } from "../../contexts/MessageContext";
+
 export default function AudioCustomPlayer({ audio }) {
   const soundRef = useRef(null);
 
   const { isFavorite, loading, toggleFavorite } = useFavoriteAudio(audio.favorite, audio.id);
+  const { addToast } = useToast()
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -88,19 +91,19 @@ export default function AudioCustomPlayer({ audio }) {
 
         <div className="like-unlike-buttons">
           <Tooltip title="Toggle like/unlike" placement="right" disableInteractive>
-            <button onClick={(e) => { e.preventDefault(); toggleFavorite();}}>
+            <button onClick={(e) => { e.preventDefault(); toggleFavorite(); addToast("Audio liked successfully")}}>
               {isFavorite ? (
-                <span>
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
-                  </svg>
-                </span>
-              ) : (
                 <div className="liked-audio-svg">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
                     <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z"/>
                   </svg>
                 </div>
+              ) : (
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                    <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+                  </svg>
+                </span>
               )}
             </button>
           </Tooltip>
@@ -152,6 +155,11 @@ export default function AudioCustomPlayer({ audio }) {
           value={volume}
           onChange={handleVolumeChange}
         />
+        <button className="toggle-audio-player-full-window">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m480-193 85-85 57 56L480-80 338-222l57-56 85 85ZM193-480l85 85-56 57L80-480l142-142 56 57-85 85Zm574 0-85-85 56-57 142 142-142 142-56-57 85-85ZM480-767l-85 85-57-56 142-142 142 142-57 56-85-85Z"/></svg>
+          </span>
+        </button>
       </div>
     </div>
   );

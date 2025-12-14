@@ -71,7 +71,6 @@ export default function AudioUploadPanel({ onUpload }) {
     if (dropped) handleFileSelect(dropped);
   };
 
-
   return (
     <div className="upload-panel-container">
       <div
@@ -121,7 +120,7 @@ export default function AudioUploadPanel({ onUpload }) {
             </span>
 
             <button className="upload-button">
-              Upload Manualy
+              Upload File
             </button>
           </div>
         )}

@@ -2,10 +2,11 @@
   width: 100%;
   height: auto;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .container-main{
-  width: 50%;
+  width: clamp(320px, 65%, 800px);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -20,9 +21,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  font-weight: 500;
+
   padding-top: 20px;
+  span{
+    font-size: 28px;
+    font-weight: 500; 
+  }
 }
 
 .audios-container {
@@ -41,13 +45,21 @@
   }
 }
 .liked-audios-container{
-  margin: -20px;
+  margin: 0;
 }
 
 .audios-scroll-container {
   display: flex;
   gap: 14px;
   overflow-x: auto;
-  padding: 10px; 
   scrollbar-width: none;
+  
+}
+
+
+@media (max-width: 430px) {
+  .container-main {
+    width: 100%;
+    padding: 0 8px;
+  }
 }

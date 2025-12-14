@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getAudios, getAllTranscriptedAudios } from "../services/api";
+import { delay } from "../helper/Delay";
+
 
 const AudioContext = createContext();
 
@@ -27,6 +29,9 @@ export function AudioProvider({ children }) {
       setLoading(true);
 
       try {
+
+        await delay(1000)
+
         const audiosData = await getAudios()
         if (!mounted) return
 

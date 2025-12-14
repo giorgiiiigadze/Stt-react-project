@@ -5,7 +5,7 @@ import { useFavoriteAudio } from '../hooks/ToggleFavourite';
 import '../css/AudioBox.css'
 
 
-function AudioBox({ audio, width, height, borderRadius }) {
+function AudioBox({ audio, width, height, borderRadius, favouriteButton=false }) {
     const { isFavorite, loading, toggleFavorite } = useFavoriteAudio(audio.favorite, audio.id);
 
     return (
@@ -33,23 +33,26 @@ function AudioBox({ audio, width, height, borderRadius }) {
                 <div className="audio-date">
                     {new Date(audio.created_at).toLocaleDateString()}
                 </div>
-                {/* <button
+                {favouriteButton && (
+                <button
                     onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite();
+                    e.preventDefault();     // stop Link navigation
+                    e.stopPropagation();    // extra safety
+                    toggleFavorite();
                     }}
                     disabled={loading}
                     style={{
-                        background: "transparent",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "20px",
-                        color: isFavorite ? "#616161" : "gray",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "20px",
+                    color: isFavorite ? "#616161" : "gray",
                     }}
                     title={isFavorite ? "Remove from favorites" : "Add to favorites"}
                 >
                     {isFavorite ? "★" : "☆"}
-                </button> */}
+                </button>
+                )}
             </footer>
         </Link>
     );
