@@ -13,17 +13,18 @@
 .audio-tab{
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   color: #ada9a3;
   background-color: transparent;
-  padding-inline: 10px;
-  height: 36px;
+  padding-inline: 12px;
+  padding: 6px 12px;
+  height: 32px;
   border-radius: 20px;
 
   span{
     font-size: 14px;
-    font-weight: 600;
-    line-height: 1.2;
+    font-weight: 500;
   }
 
   svg{

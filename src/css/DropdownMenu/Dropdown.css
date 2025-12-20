@@ -18,7 +18,7 @@
   padding: 6px;
   gap: 4px;
   z-index: 1000;
-  animation: dropdownIn 120ms ease;
+  animation: dropdownIn 200ms ease;
 }
 
 .dropdown-menu.left {

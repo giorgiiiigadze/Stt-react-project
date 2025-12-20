@@ -3,8 +3,10 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import Header from '../components/Header';
-import AudioBox from '../components/AudioBox';
 import LoginMessage from '../components/LoginMessage';
+
+import AudioBox from '../components/AudioBox';
+import AudioComponent from '../components/AudioComponent';
 
 import { useUser } from "../contexts/UserContext";
 import { useAudios } from '../contexts/AudioContext';
@@ -71,12 +73,12 @@ export default function Home() {
               </>
             )}
 
-            {!loading && error && <p>{error}</p>}
+            {!loading && error && <div className="error-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>{error}</div>}
 
             {!loading && !error && (
               <>
                 <div className='upper-text-container'>
-                  <span>{userLoading ? "Loading..." : user?.username}s workshop</span>
+                  <span className='main-text'>{userLoading ? "Loading..." : user?.username}s workshop</span>
                 </div>
 
                 <div className="audios-container">
@@ -99,7 +101,7 @@ export default function Home() {
                     </div>
                   ) : (
 
-                    <div style={{maxWidth: '100%', padding: '10px'}}>
+                    <div style={{maxWidth: '100%'}}>
                       <p style={{ 
                         fontSize: '12px', 
                         fontWeight: 500, 
@@ -114,16 +116,15 @@ export default function Home() {
                           <AudioBox
                             key={audio.id}
                             audio={audio}
-                            width={"140px"}
-                            height={"140px"}
-                            borderRadius={22}
+                            width={"150px"}
+                            height={"150px"}
+                            borderRadius={18}
                           />
                         ))}
                       </div>
                     </div>
                   )}
                 </div>
-
                 <div className="audios-container liked-audios-container">
                   {audios.filter(audio => audio.favorite).length === 0 ? (
                     <Tooltip title="Favourite audios you like.." placement="right">
@@ -146,7 +147,7 @@ export default function Home() {
                     </Tooltip>
                   ) : (
 
-                    <div style={{maxWidth: '100%', padding: '10px'}}>
+                    <div style={{maxWidth: '100%'}}>
                       <p style={{ 
                         fontSize: '12px', 
                         fontWeight: 500, 
@@ -166,7 +167,7 @@ export default function Home() {
                               key={audio.id}
                               borderRadius={16}
                               audio={audio}
-                              width={"240px"}
+                              width={"300px"}
                               height={"180px"}
                               favouriteButton={true}
                             />
@@ -174,6 +175,19 @@ export default function Home() {
                       </div>
                     </div>
                   )}
+                </div>
+                <div className="audio-player-container">
+                  <div className="audio-player-controls">
+                    <button onClick={() => console.log("Previous")}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-first-icon lucide-chevron-first"><path d="m17 18-6-6 6-6"/><path d="M7 6v12"/></svg></button>
+                    <button onClick={() => console.log("Play")}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg></button>
+                    <button onClick={() => console.log("Next")}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-last-icon lucide-chevron-last"><path d="m7 18 6-6-6-6"/><path d="M17 6v12"/></svg></button>
+                  </div>
+
+                  <div className="audio-waveform-container">
+
+                  </div>
+                  <button onClick={() => console.log("More")}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+
                 </div>
               </>
             )}

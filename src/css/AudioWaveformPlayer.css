@@ -1,0 +1,24 @@
+.waveform-player{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 4px;
+    min-width: 400px;
+}
+
+.waveform{
+    width: 100%;
+}
+
+.waveform-play-btn{
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+    svg{
+        fill: #fff;
+    }
+}

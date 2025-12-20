@@ -7,6 +7,7 @@ import { UserProvider } from "./contexts/UserContext";
 import { TableProvider } from "./contexts/AudioTableContext";
 import { AudioProvider } from "./contexts/AudioContext";
 import { ToastProvider } from "./contexts/MessageContext";
+import { CompletedUserProvider } from "./contexts/CompletedUserContext";
 
 import Home from "./pages/Home";
 import Audios from "./pages/Audios";
@@ -20,35 +21,38 @@ export default function App() {
   return (
     <BrowserRouter>
       <UserProvider>
-        <AudioProvider>
-          <ToastProvider>
-            <SidebarProvider>
-              <TableProvider>
-                <div className="main_container" style={{ display: "flex", minHeight: "100vh" }}>
-                  
-                  <Sidebar />
+        <CompletedUserProvider>
+          <AudioProvider>
+            <ToastProvider>
+              <SidebarProvider>
+                <TableProvider>
+                  <div className="main_container" style={{ display: "flex", minHeight: "100vh" }}>
+                    
+                    <Sidebar />
 
-                  <div style={{ flex: 1, width: "100%" }}>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/audios" element={<Audios />} />
-                      <Route path="/audios/:id" element={<AudioDetails />} />
-                      <Route path="/audio_upload" element={<AudioUpload />} />
+                    <div style={{ flex: 1, width: "100%" }}>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/audios" element={<Audios />} />
+                        <Route path="/audios/:id" element={<AudioDetails />} />
+                        <Route path="/audio_upload" element={<AudioUpload />} />
 
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </div>
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </div>
 
-                </div>                
-              </TableProvider>
+                  </div>                
+                </TableProvider>
+              
+              </SidebarProvider>            
+            </ToastProvider>
             
-            </SidebarProvider>            
-          </ToastProvider>
-           
-        </AudioProvider>
+          </AudioProvider>          
+        </CompletedUserProvider>
+
      
       </UserProvider>
 

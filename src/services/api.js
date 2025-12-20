@@ -32,13 +32,45 @@ export const editAudioTitle = (audioId, newTitle) => {
   );
 };
 
+export const getAudioComments = (audioId) => {
+  return apiRequest(
+    `/stt/api/audio/comment/${audioId}/`,
+    "GET"
+  );
+};
+
+export const commentAudio = (audioId, content) => {
+  return apiRequest(
+    `/stt/api/audio/comment/${audioId}/`,
+    "POST",
+    { content }
+  );
+};
+
+export const deleteComment = (commentId) => {
+  return apiRequest(
+    `/stt/api/audio/comment/delete/${commentId}/`,
+    'DELETE'
+  )
+}
+
+export const updateCommentType = (commentId, commentType) => {
+  return apiRequest(
+    `/stt/api/audio/comment/edit_type/${commentId}/`,
+    'PATCH',
+    { comment_type: commentType }
+  )
+}
+
 export const deleteAudio = (audioId) => {
   return apiRequest(`/stt/api/audio/${audioId}/`, "DELETE");
 };
 
-
 export const getUser = () => 
   apiRequest("/users/api/profile/", "GET");
+
+export const getCompletedUser = () =>
+  apiRequest("/users/api/completed_profile/", "GET")
 
 
 export const registerUser = (username, email, password, confirm_password) => {

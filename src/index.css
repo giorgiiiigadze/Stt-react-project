@@ -42,3 +42,23 @@ button{
   border: none;
   cursor: pointer;
 }
+
+.error-container{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  height: auto;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 6px;
+  gap: 6px;
+  color: #D44C47;
+  border: 1px solid #D44C47;
+
+  svg{
+    stroke: #D44C47;
+    width: 18px;
+    height: 18px;
+  }
+}

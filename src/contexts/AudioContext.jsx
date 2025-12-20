@@ -44,7 +44,12 @@ export function AudioProvider({ children }) {
         setError(null)
       } catch (err) {
         if (!mounted) return;
-        setError("Failed to load audios or transcriptions...")
+        if (err.response?.status === 429){
+          setError("Way too many request was sent")
+        }
+        else{
+          setError("Something went wrong while loading audios")
+        }
       } finally {
         if (mounted) setLoading(false)
       }

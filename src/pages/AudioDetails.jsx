@@ -1,6 +1,6 @@
 import '../css/AudioDetails.css';
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -9,12 +9,15 @@ import { deleteAudio } from '../services/api';
 
 import AudioCustomPlayer from '../components/Player/AudioCustomPlayer';
 import AudioStatus from '../components/AudioStatus';
-import AudioTabs from '../components/Tabs/AudioTabs';
 import ConfirmDialog from '../components/Dialog/ConfrimDialog';
+
+import AudioTabs from '../components/Tabs/AudioTabs';
+import AudioComments from '../components/Tabs/Tabs/Comments';
 
 import Tooltip from '@mui/material/Tooltip';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import useMediaQuery from '../hooks/MediaQuery'
 
 // import AudioWaveformPlayer from '../components/Player/AudioWaveformPlayer';
 import { useToast } from '../contexts/MessageContext';
@@ -26,7 +29,10 @@ export default function AudioDetails() {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showTranscriptionTag, setShowTranscriptionTag] = useState(false)
-  const [activeTab, setActiveTab] = useState("Transcription");
+
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem(`audio-details-tab-${id}`) || "Transcription";
+  });
 
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [newTitle, setNewTitle] = useState('')
@@ -40,6 +46,13 @@ export default function AudioDetails() {
     t => String(t.audio) === String(audio?.id)
   );
 
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  useEffect(() => {
+    if (!id) return;
+    localStorage.setItem(`audio-details-tab-${id}`, activeTab);
+  }, [activeTab, id]);
+
   const handleSave = async () => {
     if (!isEditingTitle) {
       addToast("Enable edit mode before saving", "error");
@@ -47,7 +60,7 @@ export default function AudioDetails() {
     }
 
     if(!newTitle.trim()) {
-      addToast("Audio title can't be more than 6 characters", 'error')
+      addToast("Audio title can't be less than 6 characters", 'error')
       return
     }
 
@@ -85,14 +98,16 @@ export default function AudioDetails() {
     }
   };
 
-
   const handleDelete = async (audioId) => {
     try {
       await deleteAudio(audioId);
-      addToast("Audio deleted successfully")
       navigate('/')
     } catch (error) {
       console.error("Failed to delete audio:", error);
+      addToast("Failed to delete audio.", 'error')
+    }
+    finally{
+      addToast("Audio deleted successfully.")
     }
   };
 
@@ -109,7 +124,6 @@ export default function AudioDetails() {
             <div className="audio-upper-section">
             </div>
             <div className="audio-title">
-
               <Skeleton 
                   width={24} 
                   height={24}
@@ -118,8 +132,8 @@ export default function AudioDetails() {
                   highlightColor="#515151ff"
               />
               <Skeleton 
-                  width={500} 
-                  height={16}
+                  width={isMobile ? 200 : 500} 
+                  height={isMobile ? 10 : 16}
                   style={{ borderRadius: '12px' }}
                   baseColor="#292929"
                   highlightColor="#515151ff"
@@ -155,6 +169,7 @@ export default function AudioDetails() {
                 )
               }
               </button>
+
               <Tooltip title="Enable Edit Mode" placement="top">
                 <button onClick={() => { setNewTitle(audio.file_title); setIsEditingTitle(!isEditingTitle);}}>
                   <svg
@@ -177,7 +192,7 @@ export default function AudioDetails() {
             </div>
 
             <div className="audio-title">
-              <AudioStatus status={audio.status} padding={14} />
+              <AudioStatus status={audio.status} padding={isMobile ? 12 : 14} />
 
               {isEditingTitle ? (
                 <div
@@ -218,27 +233,43 @@ export default function AudioDetails() {
             </div>
 
             <div className="audio-section">
-              <AudioTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+              <AudioTabs 
+                activeTab={activeTab} 
+                setActiveTab={setActiveTab}
+                tabSections={
+                  isMobile
+                    ? [activeTab]
+                    : ["Transcription", "Waveform", "Comments"]
+                }
+              />
 
               <div className='audio-actions' style={{display: 'flex'}}>
-                
-                <Tooltip title="Delete Audio" placement="top">
-                  <button onClick={() => setShowDeleteDialog(true)}>
-                    <svg
-                      aria-hidden="true"
-                      role="graphics-symbol"
-                      viewBox="0 0 20 20"
-                      style={{ width: "22px", height: "22px", display: "block", flexShrink: 0 }}
-                    >
-                      <path
-                        d="M8.806 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0zM12.294 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0z"
-                      />
-                      <path
-                        d="M6.386 3.925v1.464H3.523a.625.625 0 1 0 0 1.25h.897l.393 8.646A2.425 2.425 0 0 0 7.236 17.6h5.528a2.425 2.425 0 0 0 2.422-2.315l.393-8.646h.898a.625.625 0 1 0 0-1.25h-2.863V3.925c0-.842-.683-1.525-1.525-1.525H7.91c-.842 0-1.524.683-1.524 1.525zM7.91 3.65h4.18c.15 0 .274.123.274.275v1.464H7.636V3.925c0-.152.123-.275.274-.275zm-.9 2.99h7.318l-.39 8.588a1.175 1.175 0 0 1-1.174 1.122H7.236a1.175 1.175 0 0 1-1.174-1.122l-.39-8.589z"
-                      />
+                {isMobile ? 
+                (
+                  <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                    <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
                     </svg>
                   </button>
-                </Tooltip>
+                ): (
+                  <Tooltip title="Delete Audio" placement="top">
+                    <button onClick={() => setShowDeleteDialog(true)}>
+                      <svg
+                        aria-hidden="true"
+                        role="graphics-symbol"
+                        viewBox="0 0 20 20"
+                        style={{ width: "22px", height: "22px", display: "block", flexShrink: 0 }}
+                      >
+                        <path
+                          d="M8.806 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0zM12.294 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0z"
+                        />
+                        <path
+                          d="M6.386 3.925v1.464H3.523a.625.625 0 1 0 0 1.25h.897l.393 8.646A2.425 2.425 0 0 0 7.236 17.6h5.528a2.425 2.425 0 0 0 2.422-2.315l.393-8.646h.898a.625.625 0 1 0 0-1.25h-2.863V3.925c0-.842-.683-1.525-1.525-1.525H7.91c-.842 0-1.524.683-1.524 1.525zM7.91 3.65h4.18c.15 0 .274.123.274.275v1.464H7.636V3.925c0-.152.123-.275.274-.275zm-.9 2.99h7.318l-.39 8.588a1.175 1.175 0 0 1-1.174 1.122H7.236a1.175 1.175 0 0 1-1.174-1.122l-.39-8.589z"
+                        />
+                      </svg>
+                    </button>
+                  </Tooltip>
+                )}
                 
                 <button 
                   style={{ background: isEditingTitle ? "rgb(35, 131, 226)" : "#3f3f3f ", color: '#fff' }}
@@ -252,24 +283,19 @@ export default function AudioDetails() {
             </div>
 
             <div className="audio-details">
-              {activeTab === "Transcription" && (
-                <div>Transcription</div>
-              )}
+              {activeTab === "Transcription" && <div>Transcription</div>}
 
-              {activeTab === "Waveform" && (
-                <div>Waveform</div>
-              )}
+              { activeTab === "Waveform" && <div>Waveform</div>}
 
-              {activeTab === "Comments" && (
-                <div>Comments</div>
-              )}
+              { activeTab === "Comments" && <AudioComments audioId={audio.id}/>}
             </div>
+
               
             <div className="audio-transcription"></div>
             <div className="audio-comment-list"></div>
             <div className="add-comment"></div>
             
-            <div className="custom-audio-player-wrapper">
+            <div className="custom-audio-player-wrapper" style={{display: 'none'}}>
               <AudioCustomPlayer audio={audio}/>
             </div>
 

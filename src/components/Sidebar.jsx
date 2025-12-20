@@ -5,7 +5,9 @@ import { Link, useLocation } from "react-router-dom";
 import { useSidebar } from "../contexts/SidebarContext";
 import { useUser } from "../contexts/UserContext";
 import { useAudios } from '../contexts/AudioContext';
+import SearchDialog from './Dialog/SearchDialog';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from "react-router-dom";
 
 import AudioStatus from "./AudioStatus";
 import shrinkedTitle from "./ShrinkedAudioTitle";
@@ -22,13 +24,14 @@ import 'react-loading-skeleton/dist/skeleton.css';
 export default function Sidebar() {
   const { isOpen, toggleOpen } = useSidebar();
   const location = useLocation();
-
+  const navigate = useNavigate();
+  
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const savedWidth = localStorage.getItem("sidebar_width");
     return savedWidth ? parseInt(savedWidth) : 600;
   });
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   const [loginDialogOpen, setLoginDialogOpen] = useState(false)
 
@@ -55,7 +58,6 @@ export default function Sidebar() {
   //   }
   // }, [isMobile]);
 
-  
   useEffect(() => {
     if (!loading && audios?.length) {
       setLastAudioCount(audios.length);
@@ -64,14 +66,11 @@ export default function Sidebar() {
 
   return (
     <>
-      {dialogOpen && (
-        <div className="search-dialog">
-          <div>
-            <h2>Dialog Title</h2>
-            <p>This is a simple dialog in React.</p>
-            <button onClick={() => setDialogOpen(false)}>Close</button>
-          </div>
-        </div>
+      {searchDialogOpen && (
+        <SearchDialog
+          open={searchDialogOpen}
+          onClose={() => setSearchDialogOpen(false)}
+        />
       )}
 
       {loginDialogOpen && (
@@ -94,17 +93,14 @@ export default function Sidebar() {
             <Dropdown
               align="left"
               trigger={({ open }) => (
-                <button className="profile-dropdown">
-                  <ProfilePicture padding={10} />
-                  <span>{user?.username}</span>
-                </button>
+                <ProfilePicture padding={10} borderRadius={4} />
               )}
               width={300}
             >
               {({ close }) => (
                 <>
                   <div className="profile-information">
-                    <ProfilePicture padding={20} />
+                    <ProfilePicture padding={20} borderRadius={4}/>
                     <div>
                       <div>{user?.username}</div>
                       <div style={{color: '#ada9a3'}}>{user?.email}</div>
@@ -121,52 +117,33 @@ export default function Sidebar() {
             </Dropdown>
             
             <button onClick={toggleOpen}>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                <path d="m336-280-56-56 144-144-144-143 56-56 144 144 143-144 56 56-144 143 144 144-56 56-143-144-144 144Z"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevrons-left-icon lucide-chevrons-left"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
             </button>
           </div>
 
           <Tooltip title="Search for audios..." placement="left">
-            <Link className="sidebar-link" onClick={() => setDialogOpen(true)}>
-              <svg
-                aria-hidden="true"
-                role="graphics-symbol"
-                viewBox="0 0 20 20"
-                className="magnifyingGlass"
-                style={{
-                  width: "22px",
-                  height: "22px",
-                  display: "block",
-                  flexShrink: 0,
-                }}>
-                <path d="M8.875 2.625a6.25 6.25 0 1 0 3.955 11.09l3.983 3.982a.625.625 0 1 0 .884-.884l-3.983-3.982a6.25 6.25 0 0 0-4.84-10.205m-5 6.25a5 5 0 1 1 10 0 5 5 0 0 1-10 0" />
-              </svg>
-
+            <Link className="sidebar-link" onClick={() => setSearchDialogOpen(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
               <span>Search</span>
-            </Link>    
+            </Link>
           </Tooltip>
 
           <Tooltip title="Home page" placement="left">
             <Link to="/" className={`sidebar-link ${location.pathname === "/" ? "active" : ""}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               <span>Home</span>
             </Link>
           </Tooltip>
 
           <Tooltip title="Create new audio" placement="left">
             <Link to="/audio_upload" className={`sidebar-link ${location.pathname.startsWith("/audio_upload") ? "active" : ""}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-plus-icon lucide-file-plus"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M9 15h6"/><path d="M12 18v-6"/></svg>
               <span>Create New</span>
             </Link>
           </Tooltip>
           <Tooltip title="Every audio details page" placement="left">
             <Link to="/audios" className={`sidebar-link ${location.pathname.startsWith("/audios") ? "active" : ""}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                <path d="M360-120H200q-33 0-56.5-23.5T120-200v-280q0-75 28.5-140.5t77-114q48.5-48.5 114-77T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480v280q0 33-23.5 56.5T760-120H600v-320h160v-40q0-117-81.5-198.5T480-760q-117 0-198.5 81.5T200-480v40h160v320Zm-80-240h-80v160h80v-160Zm400 0v160h80v-160h-80Zm-400 0h-80 80Zm400 0h80-80Z"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-audio-lines-icon lucide-audio-lines"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
               <span>Audios</span>
             </Link>
           </Tooltip>
@@ -178,9 +155,13 @@ export default function Sidebar() {
               {loading ? (
                 <>
                   <div className="audios-names-title">
-                    <Tooltip title="Your audios name list" placement="left">
-                      <span>Uploaded Audios</span>
-                    </Tooltip>
+                      <Skeleton
+                        width={100}
+                        height={8}
+                        style={{ borderRadius: '4px' }}
+                        baseColor="#292929"
+                        highlightColor="#515151ff"
+                      /> 
                   </div>
                   {[...Array(3)].map((_, index) => (
                     <div className='audio-nam sidebar-link' key={index}>
@@ -202,9 +183,13 @@ export default function Sidebar() {
                   ))}
 
                   <div className="audios-names-title">
-                    <Tooltip title="Your audios name list" placement="left">
-                      <span>Uploaded Audios</span>
-                    </Tooltip>
+                      <Skeleton
+                        width={100}
+                        height={8}
+                        style={{ borderRadius: '4px' }}
+                        baseColor="#292929"
+                        highlightColor="#515151ff"
+                      /> 
                   </div>
                   {[...Array(lastAudioCount)].map((_, index) => (
                     <div className='audio-nam sidebar-link' key={index}>
@@ -228,54 +213,54 @@ export default function Sidebar() {
                 
               )
               : error ? (
-                <p>{error}</p>
+                <div className="error-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>{error}</div>
               ) : audios.length === 0 ? (
                 <div className="sidebar-link"><span>No audios found</span></div>
               ) : (
                 <>
                 {audios.filter(audio => audio.favorite).length > 0 &&
-                <>
-                  <div className="audios-names-title">
-                    <Tooltip title="Your audios name list" placement="left">
-                      <span style={{color: '#fff'}}>Favourited Audios</span>
-                    </Tooltip>
-                  </div>
-                  {audios.filter(audio => audio.favorite).map(audio => (
-                    <Link
-                      to={`/audios/${audio.id}`}
-                      className={`audio-name sidebar-link ${location.pathname === `/audios/${audio.id}` ? "active" : ""}`}
-                      key={audio.id}
-                    >
-                      <span>
-                        <AudioStatus status={audio.status} padding={"8"} />
-                        {shrinkedTitle(audio, 20)}
-                      </span>
-
-                      <Dropdown
-                        align="left"
-                        trigger={({ open }) => (
-                          <button className="audio-more-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                              <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"/>
-                            </svg>
-                          </button>
-                        )}
-                        width={200}
+                  <>
+                    <div className="audios-names-title">
+                      <Tooltip title="Your audios name list" placement="left">
+                        <span style={{color: '#fff'}}>Favourited Audios</span>
+                      </Tooltip>
+                    </div>
+                    {audios.filter(audio => audio.favorite).map(audio => (
+                      <Link
+                        to={`/audios/${audio.id}`}
+                        className={`audio-name sidebar-link ${location.pathname === `/audios/${audio.id}` ? "active" : ""}`}
+                        key={audio.id}
                       >
-                        {({ close }) => ( 
-                          <>
-                            <DropdownItem onClick={close}>Duplicate</DropdownItem>
-                            <DropdownItem onClick={close}>Add to favourites</DropdownItem>
-                            <DropdownItem onClick={close}>Edit</DropdownItem>
-                            <DropdownItem danger onClick={handleLogoutButton}>
-                              Move to trash
-                            </DropdownItem>
-                          </>
-                        )}
-                      </Dropdown>
-                    </Link>
-                  ))}    
-                </>            
+                        <span>
+                          <AudioStatus status={audio.status} padding={"8"} />
+                          {shrinkedTitle(audio, 25)}
+                        </span>
+
+                        <Dropdown
+                          align="left"
+                          trigger={({ open }) => (
+                            <button className="audio-more-btn">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                                <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"/>
+                              </svg>
+                            </button>
+                          )}
+                          width={200}
+                        >
+                          {({ close }) => ( 
+                            <>
+                              <DropdownItem onClick={close}>Duplicate</DropdownItem>
+                              <DropdownItem onClick={close}>Add to favourites</DropdownItem>
+                              <DropdownItem onClick={close}>Edit</DropdownItem>
+                              <DropdownItem danger onClick={handleLogoutButton}>
+                                Move to trash
+                              </DropdownItem>
+                            </>
+                          )}
+                        </Dropdown>
+                      </Link>
+                    ))}    
+                  </>            
                 }
 
                   <div className="audios-names-title">
@@ -336,19 +321,7 @@ export default function Sidebar() {
 
           <Tooltip title="Restore deleted audios" placement="left">
             <Link to="/" className="sidebar-link">
-              <svg
-                aria-hidden="true"
-                role="graphics-symbol"
-                viewBox="0 0 20 20"
-                style={{ width: "22px", height: "22px", display: "block", flexShrink: 0 }}
-              >
-                <path
-                  d="M8.806 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0zM12.294 8.505a.55.55 0 0 0-1.1 0v5.979a.55.55 0 1 0 1.1 0z"
-                />
-                <path
-                  d="M6.386 3.925v1.464H3.523a.625.625 0 1 0 0 1.25h.897l.393 8.646A2.425 2.425 0 0 0 7.236 17.6h5.528a2.425 2.425 0 0 0 2.422-2.315l.393-8.646h.898a.625.625 0 1 0 0-1.25h-2.863V3.925c0-.842-.683-1.525-1.525-1.525H7.91c-.842 0-1.524.683-1.524 1.525zM7.91 3.65h4.18c.15 0 .274.123.274.275v1.464H7.636V3.925c0-.152.123-.275.274-.275zm-.9 2.99h7.318l-.39 8.588a1.175 1.175 0 0 1-1.174 1.122H7.236a1.175 1.175 0 0 1-1.174-1.122l-.39-8.589z"
-                />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
               <span>Trash</span>
             </Link>
           </Tooltip>
