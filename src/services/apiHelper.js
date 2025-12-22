@@ -3,20 +3,22 @@ const BASE_URL = "http://127.0.0.1:8000";
 const getAccessToken = () => localStorage.getItem("access_token");
 const getRefreshToken = () => localStorage.getItem("refresh_token");
 
-import { refreshToken } from "./refreshApi"; 
+import { refreshToken } from "./refreshApi";
+
+let isRefreshing = false;
+let waitQueue = [];
 
 export const apiRequest = async (endpoint, method = "GET", body = null) => {
   let token = getAccessToken();
 
   const headers = {};
-
   if (!(body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
+  if (token) headers.Authorization = `Bearer ${token}`;
 
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const payload = body instanceof FormData ? body : body ? JSON.stringify(body) : null;
+  const payload =
+    body instanceof FormData ? body : body ? JSON.stringify(body) : null;
 
   let response = await fetch(`${BASE_URL}${endpoint}`, {
     method,
@@ -24,20 +26,33 @@ export const apiRequest = async (endpoint, method = "GET", body = null) => {
     body: payload,
   });
 
-
   if (response.status === 401) {
-    const refresh = getRefreshToken();
-    if (!refresh) {
-      const error = new Error("Not authenticated");
-      error.status = 401;
-      throw error;
+    if (!getRefreshToken()) {
+      throw Object.assign(new Error("Not authenticated"), { status: 401 });
     }
 
-    try {
-      const newAccess = await refreshToken();  
-      token = newAccess;
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        waitQueue.push({ resolve, reject });
+      }).then(newToken => {
+        headers.Authorization = `Bearer ${newToken}`;
+        return fetch(`${BASE_URL}${endpoint}`, {
+          method,
+          headers,
+          body: payload,
+        }).then(res => res.json());
+      });
+    }
 
-      if (token) headers["Authorization"] = `Bearer ${token}`;
+    isRefreshing = true;
+
+    try {
+      const newAccess = await refreshToken();
+
+      waitQueue.forEach(p => p.resolve(newAccess));
+      waitQueue = [];
+
+      headers.Authorization = `Bearer ${newAccess}`;
 
       response = await fetch(`${BASE_URL}${endpoint}`, {
         method,
@@ -45,12 +60,12 @@ export const apiRequest = async (endpoint, method = "GET", body = null) => {
         body: payload,
       });
     } catch (e) {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-
-      const error = new Error("Session expired");
-      error.status = 401;
-      throw error;
+      waitQueue.forEach(p => p.reject(e));
+      waitQueue = [];
+      localStorage.clear();
+      throw Object.assign(new Error("Session expired"), { status: 401 });
+    } finally {
+      isRefreshing = false;
     }
   }
 
@@ -59,7 +74,9 @@ export const apiRequest = async (endpoint, method = "GET", body = null) => {
   if (!response.ok) {
     const error = new Error("API Error");
     error.status = response.status;
-    try { error.data = await response.json(); } catch {}
+    try {
+      error.data = await response.json();
+    } catch {}
     throw error;
   }
 

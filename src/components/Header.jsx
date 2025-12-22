@@ -49,7 +49,7 @@ export default function Header({ audio, loading } = {}) {
       ) : loading ? (
         <div className="header-audio-name">
           <Skeleton width={16} height={16} style={{ borderRadius: '4px' }} baseColor="#292929" highlightColor="#515151ff" />
-          <Skeleton width={200} height={8} style={{ borderRadius: '12px' }} baseColor="#292929" highlightColor="#515151ff" />
+          <Skeleton width={100} height={6} style={{ borderRadius: '12px' }} baseColor="#292929" highlightColor="#515151ff" />
         </div>
       ) : null}
 
@@ -86,7 +86,6 @@ export default function Header({ audio, loading } = {}) {
 
         <Tooltip title="Record or upload" placement="bottom">
           <button 
-            // onClick={() => setShowUploadDialog(!showUploadDialog)}
             onClick={() => navigate('/audio_upload')}
             className="edit-home-page-button sidebar-button"
           >

@@ -1,13 +1,17 @@
 import '../css/Sidebar.css';
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate  } from "react-router-dom";
 
 import { useSidebar } from "../contexts/SidebarContext";
 import { useUser } from "../contexts/UserContext";
 import { useAudios } from '../contexts/AudioContext';
+
+import { useToast } from '../contexts/MessageContext';
+import { deleteAudio } from '../services/api';
+
 import SearchDialog from './Dialog/SearchDialog';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from "react-router-dom";
+import ErrorContainer from '../components/ErrorContainer'
 
 import AudioStatus from "./AudioStatus";
 import shrinkedTitle from "./ShrinkedAudioTitle";
@@ -25,31 +29,35 @@ export default function Sidebar() {
   const { isOpen, toggleOpen } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const savedWidth = localStorage.getItem("sidebar_width");
     return savedWidth ? parseInt(savedWidth) : 600;
   });
 
+  const { addToast } = useToast()
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   const [loginDialogOpen, setLoginDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
-  const [lastAudioCount, setLastAudioCount] = useState(6);
+  const [audioToDelete, setAudioToDelete] = useState(null);
 
-  const isMobile = useMediaQuery("(max-width: 430px)")
-  const { user, userLoading } = useUser();
+  const [lastAudioCount, setLastAudioCount] = useState(5);
+  
+  const { user, userLoading, logout } = useUser();
   const { audios, loading, error, isLoggedIn } = useAudios(user);
+  const [logginOut, setLoggingOut] = useState(false)
   
-  // const favouritedAudiosLength = audios.filter(audio => audio.favorite).length
-  
-  function handleLogout() {
-    localStorage.removeItem("access_token");
-    window.location.reload();
-  }
+  function handleConfrimLogout() {
+    setLoginDialogOpen(false);
+    setLoggingOut(true);
+    console.log("Logging Out")
 
-  function handleLogoutButton(){
-    setLoginDialogOpen(true)
+    setTimeout(() => {
+      logout();
+      navigate("/login", { replace: true });
+    }, 600);
   }
   // Add the return to old state part later
   // useEffect(() => {
@@ -57,6 +65,16 @@ export default function Sidebar() {
   //     toggleOpen(false);
   //   }
   // }, [isMobile]);
+
+  async function handleAudioDelete(audioId) {
+    try {
+      await deleteAudio(audioId);
+      addToast("Audio deleted successfully.", "success");
+    } catch (error) {
+      console.error("Failed to delete audio:", error);
+      addToast("Failed to delete audio.", "error");
+    }
+  }
 
   useEffect(() => {
     if (!loading && audios?.length) {
@@ -81,8 +99,25 @@ export default function Sidebar() {
           confirmText="Logout"
           cancelText="Cancel"
           danger
-          onConfirm={handleLogout}
+          onConfirm={handleConfrimLogout}
           onCancel={() => setLoginDialogOpen(false)}
+        />
+      )}
+      
+      {deleteDialogOpen && (
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          title="Are you sure you want to delete this audio?"
+          description="Deleting this audio may remove associated comments and other information."
+          confirmText="Yes, Delete"
+          cancelText="Cancel"
+          danger
+          onConfirm={() => {
+            handleAudioDelete(audioToDelete);
+            setDeleteDialogOpen(false);
+            setAudioToDelete(null);
+          }}
+          onCancel={() => setDeleteDialogOpen(false)}
         />
       )}
       
@@ -90,32 +125,34 @@ export default function Sidebar() {
 
         <header className="sidebar-header">
           <div className="profile-part sidebar-link">
-            <Dropdown
-              align="left"
-              trigger={({ open }) => (
-                <ProfilePicture padding={10} borderRadius={4} />
-              )}
-              width={300}
-            >
-              {({ close }) => (
-                <>
-                  <div className="profile-information">
-                    <ProfilePicture padding={20} borderRadius={4}/>
-                    <div>
-                      <div>{user?.username}</div>
-                      <div style={{color: '#ada9a3'}}>{user?.email}</div>
-                    </div>
-                  </div>
+            <div className='profile-container'>
+              <Dropdown
+                align="left"
+                trigger={({ open }) => (
+                  <ProfilePicture padding={10} borderRadius={4} />
+                )}
+                width={300}>
 
-                  <DropdownItem onClick={close}>Settings</DropdownItem>
-                  <DropdownItem onClick={close}>Duplicate</DropdownItem>
-                  <DropdownItem danger onClick={handleLogoutButton}>
-                    Logout
-                  </DropdownItem>
-                </>
-              )}
-            </Dropdown>
-            
+                  {({ close }) => (
+                    <>
+                      <div className="profile-information">
+                        <ProfilePicture padding={20} borderRadius={4}/>
+                        <div>
+                          <div>{user?.username}</div>
+                          <div style={{color: '#ada9a3'}}>{user?.email}</div>
+                        </div>
+                      </div>
+
+                      <DropdownItem onClick={close}>Settings</DropdownItem>
+                      <DropdownItem onClick={close}>Duplicate</DropdownItem>
+                      <DropdownItem danger onClick={() => setLoginDialogOpen(true)}>
+                        Logout
+                      </DropdownItem>
+                    </>
+                  )}
+                </Dropdown>
+                <span>{user?.username}</span>
+            </div>
             <button onClick={toggleOpen}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevrons-left-icon lucide-chevrons-left"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>
             </button>
@@ -147,6 +184,12 @@ export default function Sidebar() {
               <span>Audios</span>
             </Link>
           </Tooltip>
+          <Tooltip title="Every audio details page" placement="left">
+            <Link to="/audios" className={`sidebar-link ${location.pathname.startsWith("/audios") ? "active" : ""}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox-icon lucide-inbox"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>    
+              <span>Inbox</span>
+            </Link>
+          </Tooltip>
         </header>
 
         <section className="audio-names">
@@ -155,13 +198,13 @@ export default function Sidebar() {
               {loading ? (
                 <>
                   <div className="audios-names-title">
-                      <Skeleton
-                        width={100}
-                        height={8}
-                        style={{ borderRadius: '4px' }}
-                        baseColor="#292929"
-                        highlightColor="#515151ff"
-                      /> 
+                    <Skeleton
+                      width={100}
+                      height={6}
+                      style={{ borderRadius: '4px' }}
+                      baseColor="#292929"
+                      highlightColor="#515151ff"
+                    /> 
                   </div>
                   {[...Array(3)].map((_, index) => (
                     <div className='audio-nam sidebar-link' key={index}>
@@ -174,7 +217,7 @@ export default function Sidebar() {
                       /> 
                       <Skeleton
                         width={160}
-                        height={8}
+                        height={6}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -185,7 +228,7 @@ export default function Sidebar() {
                   <div className="audios-names-title">
                       <Skeleton
                         width={100}
-                        height={8}
+                        height={6}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -202,7 +245,7 @@ export default function Sidebar() {
                       /> 
                       <Skeleton
                         width={160}
-                        height={8}
+                        height={6}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -213,55 +256,59 @@ export default function Sidebar() {
                 
               )
               : error ? (
-                <div className="error-container"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>{error}</div>
+                ErrorContainer(error)
               ) : audios.length === 0 ? (
-                <div className="sidebar-link"><span>No audios found</span></div>
+                <div className="sidebar-link"><span>No audios in {user?.username}s workspace</span></div>
               ) : (
                 <>
-                {audios.filter(audio => audio.favorite).length > 0 &&
-                  <>
-                    <div className="audios-names-title">
-                      <Tooltip title="Your audios name list" placement="left">
-                        <span style={{color: '#fff'}}>Favourited Audios</span>
-                      </Tooltip>
-                    </div>
-                    {audios.filter(audio => audio.favorite).map(audio => (
-                      <Link
-                        to={`/audios/${audio.id}`}
-                        className={`audio-name sidebar-link ${location.pathname === `/audios/${audio.id}` ? "active" : ""}`}
-                        key={audio.id}
-                      >
-                        <span>
-                          <AudioStatus status={audio.status} padding={"8"} />
-                          {shrinkedTitle(audio, 25)}
-                        </span>
-
-                        <Dropdown
-                          align="left"
-                          trigger={({ open }) => (
-                            <button className="audio-more-btn">
-                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                                <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"/>
-                              </svg>
-                            </button>
-                          )}
-                          width={200}
+                  {audios.filter(audio => audio.favorite).length > 0 &&
+                    <>
+                      <div className="audios-names-title">
+                        <Tooltip title="Your audios name list" placement="left">
+                          <span style={{color: '#fff'}}>Favourited Audios</span>
+                        </Tooltip>
+                      </div>
+                      {audios.filter(audio => audio.favorite).map(audio => (
+                        <Link
+                          to={`/audio/${audio.id}`}
+                          className={`audio-name sidebar-link ${location.pathname === `/audio/${audio.id}` ? "active" : ""}`}
+                          key={audio.id}
                         >
-                          {({ close }) => ( 
-                            <>
-                              <DropdownItem onClick={close}>Duplicate</DropdownItem>
-                              <DropdownItem onClick={close}>Add to favourites</DropdownItem>
-                              <DropdownItem onClick={close}>Edit</DropdownItem>
-                              <DropdownItem danger onClick={handleLogoutButton}>
-                                Move to trash
-                              </DropdownItem>
-                            </>
-                          )}
-                        </Dropdown>
-                      </Link>
-                    ))}    
-                  </>            
-                }
+                          <span>
+                            <AudioStatus status={audio.status} padding={"8"} />
+                            {shrinkedTitle(audio, 25)}
+                          </span>
+
+                          <Dropdown
+                            align="left"
+                            trigger={({ open }) => (
+                              <button className="audio-more-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                                  <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z"/>
+                                </svg>
+                              </button>
+                            )}
+                            width={200}
+                          >
+                            {({ close }) => ( 
+                              <>
+                                <DropdownItem onClick={close}>Duplicate</DropdownItem>
+                                <DropdownItem onClick={close}>Add to favourites</DropdownItem>
+                                <DropdownItem onClick={close}>Edit</DropdownItem>
+                                <DropdownItem danger onClick={() => {
+                                  setAudioToDelete(audio.id);
+                                  setDeleteDialogOpen(true);
+                                }}>
+                                  Move to trash
+                                </DropdownItem>
+
+                              </>
+                            )}
+                          </Dropdown>
+                        </Link>
+                      ))}    
+                    </>
+                  }
 
                   <div className="audios-names-title">
                     <Tooltip title="Your audios name list" placement="left">
@@ -270,8 +317,8 @@ export default function Sidebar() {
                   </div>
                   {audios.map(audio => (
                     <Link
-                      to={`/audios/${audio.id}`}
-                      className={`audio-name sidebar-link ${location.pathname === `/audios/${audio.id}` ? "active" : ""}`}
+                      to={`/audio/${audio.id}`}
+                      className={`audio-name sidebar-link ${location.pathname === `/audio/${audio.id}` ? "active" : ""}`}
                       key={audio.id}
                     >
                       <span>
@@ -293,8 +340,11 @@ export default function Sidebar() {
                           <>
                             <DropdownItem onClick={close}>Settings</DropdownItem>
                             <DropdownItem onClick={close}>Duplicate</DropdownItem>
-                            <DropdownItem danger onClick={handleLogoutButton}>
-                              Logout
+                              <DropdownItem danger onClick={() => {
+                                setAudioToDelete(audio.id);
+                                setDeleteDialogOpen(true);
+                              }}>
+                              Move to trash
                             </DropdownItem>
                           </>
                         )}
@@ -312,9 +362,7 @@ export default function Sidebar() {
 
           <Tooltip title="Modify your workspace" placement="left">
             <Link to="/" className="sidebar-link">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-                <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
               <span>settings</span>
             </Link>
           </Tooltip>
@@ -331,11 +379,6 @@ export default function Sidebar() {
           <button>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
               <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
-            </svg>
-          </button>
-          <button onClick={setLoginDialogOpen}>
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
-              <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z"/>
             </svg>
           </button>
         </footer>

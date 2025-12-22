@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { loginUser, getUser } from "../../services/api";
 import { useUser } from "../../contexts/UserContext";
+import { useToast } from '../../contexts/MessageContext'
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { setUser } = useUser();
+  const { setUser, setIsLoggedIn } = useUser();
+
+  const { addToast } = useToast()
 
   const login = async (username, password) => {
     setLoading(true);
@@ -17,37 +20,28 @@ export function useLogin() {
       if (data.access) {
         localStorage.setItem("access_token", data.access);
       }
+
       if (data.refresh) {
         localStorage.setItem("refresh_token", data.refresh);
       }
 
-      try {
-        const userData = await getUser();
-        if (typeof setUser === "function") {
-          setUser(userData);
-        }
-      } catch (uErr) {
-        console.warn("Failed to fetch user after login", uErr);
-      }
+      const userData = await getUser();
+      setUser(userData);
+      setIsLoggedIn(true);
 
       setLoading(false);
-      return { success: true };
 
-    } catch (err) {
+      addToast("Logged in successfully")
+      return { success: true };
+    } catch {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
-
+      setIsLoggedIn(false);
       setError("Invalid username or password");
       setLoading(false);
-
       return { success: false };
     }
   };
 
-  const isLoggedIn = () => {
-    const token = localStorage.getItem("access_token");
-    return Boolean(token && token.length > 10);
-  };
-
-  return { login, loading, error, isLoggedIn };
+  return { login, loading, error };
 }

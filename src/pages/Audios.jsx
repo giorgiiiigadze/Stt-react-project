@@ -5,9 +5,8 @@ import { useUser } from "../contexts/UserContext";
 
 import useFetchAudios from "../hooks/FetchHook";
 
-import AudioTable from "../components/Table/AudioTables";
-
 import LoginMessage from "../components/LoginMessage";
+import ErrorContainer from "../components/ErrorContainer";
 
 import Tooltip from "@mui/material/Tooltip";
 
@@ -22,19 +21,14 @@ export default function Audios() {
       <Header />
       <div className="container">
     
-        <main className="details-container">
-          <h1>Audio Tracker</h1>
-    
+        <main className="details-container">    
           {!isLoggedIn && <LoginMessage />}
 
-          {isLoggedIn && error && <p style={{ color: 'red' }}>{error}</p>}
+          {isLoggedIn && error && ErrorContainer(error)}
 
           {isLoggedIn && (
             <>
-              <section className="filtation-section">
-                <span>{userLoading ? "Loading..." : user?.username}</span>
-              </section>
-              <AudioTable />
+            Hello
             </>
           )}
         </main>

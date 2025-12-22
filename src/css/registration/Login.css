@@ -4,14 +4,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: linear-gradient(#141414, #000);
 }
 
 .login-box {
   width: 340px;
-  padding: 32px;
+  padding: 14px;
+  padding-block: 20px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
+  background-color: transparent;
+  color: #fff;
 }
 
 
@@ -29,27 +33,40 @@
 .social {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     padding: 10px;
     border-radius: 6px;
     background: #fff;
+    gap: 20px;
     font-size: 14px;
     cursor: pointer;
     color: #2c2c2b;
-    font-weight: 500;
+    font-weight: 600;
+
+    svg{
+      width: 18px;
+      height: 18px;
+    }
+
 }
 
 .divider {
     position: relative;
     margin: 20px 0;
     text-align: center;
+    height: 1px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
 }
 
 .divider span {
-    background: #fff;
+    background: #000;
     padding: 0 10px;
     font-size: 12px;
-    color: #999;
+    color: #fff;
 }
 
 .divider::before {
@@ -77,18 +94,25 @@ form {
         border-radius: 6px;
         border: 1px solid #dcdcdc;
         font-size: 14px;
+        color: #fff;
+        font-weight: 600;
+        background-color: transparent;
     }
 
     input:focus {
       outline: none;
-      border-color: #000;
+      border-color: #6d7cff;
     }
+    
 }
 
 .primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 10px;
   padding: 10px;
-  background: rgb(35, 131, 226);
+  background: #6d7cff;
   color: #fff;
   border-radius: 4px;
   border: none;
@@ -114,6 +138,6 @@ form {
 }
 
 .footer-text a {
-  color: #000;
+  color: #fff;
   font-weight: 500;
 }

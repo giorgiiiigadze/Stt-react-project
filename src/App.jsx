@@ -1,5 +1,6 @@
-import { BrowserRouter } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+
+import ProtectedRoute from "./helper/ProtectedRoute";
 
 import Sidebar from "./components/Sidebar";
 import { SidebarProvider } from "./contexts/SidebarContext";
@@ -17,6 +18,65 @@ import Login from "./pages/registration/Login";
 import Register from "./pages/registration/Register";
 import NotFound from "./pages/NotFound";
 
+function Layout() {
+  const location = useLocation();
+
+  const hideSidebar =
+    location.pathname === "/login" ||
+    location.pathname === "/register";
+
+  return (
+    <div className="main_container" style={{ display: "flex", minHeight: "100vh" }}>
+      {!hideSidebar && <Sidebar />}
+
+      <div style={{ flex: 1, width: "100%" }}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/audios"
+            element={
+              <ProtectedRoute>
+                <Audios />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/audio/:id"
+            element={
+              <ProtectedRoute>
+                <AudioDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/audio_upload"
+            element={
+              <ProtectedRoute>
+                <AudioUpload />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -26,36 +86,13 @@ export default function App() {
             <ToastProvider>
               <SidebarProvider>
                 <TableProvider>
-                  <div className="main_container" style={{ display: "flex", minHeight: "100vh" }}>
-                    
-                    <Sidebar />
-
-                    <div style={{ flex: 1, width: "100%" }}>
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/audios" element={<Audios />} />
-                        <Route path="/audios/:id" element={<AudioDetails />} />
-                        <Route path="/audio_upload" element={<AudioUpload />} />
-
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </div>
-
-                  </div>                
+                  <Layout />
                 </TableProvider>
-              
-              </SidebarProvider>            
+              </SidebarProvider>
             </ToastProvider>
-            
-          </AudioProvider>          
+          </AudioProvider>
         </CompletedUserProvider>
-
-     
       </UserProvider>
-
     </BrowserRouter>
   );
 }

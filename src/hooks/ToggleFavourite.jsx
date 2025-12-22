@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toggleFavoriteAudio } from "../services/api";
 
 export const useFavoriteAudio = (initialFavorite, audioId) => {
@@ -6,11 +6,18 @@ export const useFavoriteAudio = (initialFavorite, audioId) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const toggleFavorite = async (favorite = null) => {
+  useEffect(() => {
+    setIsFavorite(initialFavorite);
+  }, [initialFavorite]);
+
+  const toggleFavorite = async () => {
+    if (!audioId) return;
+
     setLoading(true);
     setError(null);
+
     try {
-      const result = await toggleFavoriteAudio(audioId, favorite);
+      const result = await toggleFavoriteAudio(audioId);
       setIsFavorite(result.favorite);
     } catch (err) {
       console.error("Failed to toggle favorite:", err);

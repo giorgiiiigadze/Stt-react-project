@@ -10,7 +10,7 @@ function AudioBox({ audio, width, height, borderRadius, favouriteButton=false })
 
     return (
         <Link 
-            to={`/audios/${audio.id}`} 
+            to={`/audio/${audio.id}`} 
             className="audio-card" 
             key={audio.id}
             style={{
@@ -36,8 +36,8 @@ function AudioBox({ audio, width, height, borderRadius, favouriteButton=false })
                 {favouriteButton && (
                 <button
                     onClick={(e) => {
-                    e.preventDefault();     // stop Link navigation
-                    e.stopPropagation();    // extra safety
+                    e.preventDefault();
+                    e.stopPropagation();
                     toggleFavorite();
                     }}
                     disabled={loading}

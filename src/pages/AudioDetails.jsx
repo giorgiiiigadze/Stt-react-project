@@ -12,6 +12,7 @@ import AudioStatus from '../components/AudioStatus';
 import ConfirmDialog from '../components/Dialog/ConfrimDialog';
 
 import AudioTabs from '../components/Tabs/AudioTabs';
+import Transcription from '../components/Tabs/Tabs/Transcription';
 import AudioComments from '../components/Tabs/Tabs/Comments';
 
 import Tooltip from '@mui/material/Tooltip';
@@ -19,9 +20,9 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import useMediaQuery from '../hooks/MediaQuery'
 
-// import AudioWaveformPlayer from '../components/Player/AudioWaveformPlayer';
 import { useToast } from '../contexts/MessageContext';
 import { editAudioTitle } from '../services/api';
+import { useFavoriteAudio } from '../hooks/ToggleFavourite';
 
 export default function AudioDetails() {
   const { id } = useParams();
@@ -40,11 +41,13 @@ export default function AudioDetails() {
 
   const { audios, transcriptions, loading, error, isLoggedIn } = useAudios();
   const { addToast } = useToast()
-
+  
   const audio = audios?.find(a => String(a.id) === String(id));
   const transcription = transcriptions?.find(
     t => String(t.audio) === String(audio?.id)
   );
+
+  const { isFavorite, loading: favoriteLoading, toggleFavorite } = useFavoriteAudio(audio?.favorite ?? false, audio?.id);
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -133,7 +136,7 @@ export default function AudioDetails() {
               />
               <Skeleton 
                   width={isMobile ? 200 : 500} 
-                  height={isMobile ? 10 : 16}
+                  height={isMobile ? 8 : 10}
                   style={{ borderRadius: '12px' }}
                   baseColor="#292929"
                   highlightColor="#515151ff"
@@ -153,7 +156,7 @@ export default function AudioDetails() {
              <button onClick={() => setShowTranscriptionTag(!showTranscriptionTag)}>
               { showTranscriptionTag ? (
                 <>
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#7d7a75">
                     <path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/>
                   </svg>
                   <span>Hide transcription tag</span>
@@ -161,7 +164,7 @@ export default function AudioDetails() {
                 )
                 : (
                 <>
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#7d7a75">
                     <path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/>
                   </svg>
                   <span>Show transcription tag</span>
@@ -173,6 +176,7 @@ export default function AudioDetails() {
               <Tooltip title="Enable Edit Mode" placement="top">
                 <button onClick={() => { setNewTitle(audio.file_title); setIsEditingTitle(!isEditingTitle);}}>
                   <svg
+                    fill='#7d7a75'
                     aria-hidden="true"
                     role="graphics-symbol"
                     viewBox="0 0 16 16"
@@ -189,6 +193,16 @@ export default function AudioDetails() {
                   </svg>
                 </button>
               </Tooltip>
+
+              <Tooltip title="Favourite Audio" placement="top">
+                <button
+                  onClick={toggleFavorite}
+                  disabled={favoriteLoading}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill={isFavorite ? "#fff" : "#7d7a75"}><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"/></svg>
+                </button>
+              </Tooltip>
+
             </div>
 
             <div className="audio-title">
@@ -283,7 +297,7 @@ export default function AudioDetails() {
             </div>
 
             <div className="audio-details">
-              {activeTab === "Transcription" && <div>Transcription</div>}
+              {activeTab === "Transcription" && <Transcription audioId={audio.id}/>}
 
               { activeTab === "Waveform" && <div>Waveform</div>}
 

@@ -6,7 +6,7 @@ export function DropdownItem({ children, onClick, danger }) {
       className={`dropdown-item ${danger ? "danger" : ""}`}
       onClick={onClick}
     >
-      <span>{children}</span>
+      <span style={{display: 'flex', alignItems: 'center'}}>{children}</span>
     </button>
   );
 }
