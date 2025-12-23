@@ -6,151 +6,72 @@
     
     .comments-container-header{
         width: 100%;
-        height: auto;
-        border-bottom: 1px solid #333;
+        border: 1px solid #303030;
+        background-color: #202020;
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 6px;
-
+        
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
     }
 
     form{
-        width: 18%;
-        min-width: 240px;
+        width: 100%;
         height: auto;
         display: flex;
         align-items: center;
-        justify-content: space-around;
-        flex-direction: row;
-
-        input{
-            display: flex;
-            align-items: center;
+        justify-content: space-between;
+        
+        textarea{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                        Helvetica, Arial, sans-serif, "Apple Color Emoji",
+                        "Segoe UI Emoji";
+            width: 100%;
+            min-height: 38px;
+            max-height: 160px;
             background-color: transparent;
             border: none;
             color: #fff;
+            resize: none;
+            font-size: .9375rem;
+            font-weight: 400;
+            line-height: 1.6;
 
-        }
-        button{
-            padding: 4px;
-            background-color: transparent;
-            border-radius: 50%;
-
-            svg{
-                width: 20px;
-                height: 20px;
-            }
-        }
-    }
-
-    .comment-list{
-        width: 18%;
-        min-width: 240px;
-        height: auto;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: space-around;
-        background-color: #202020;
-        padding: 10px;
-        border-radius: 8px;
-        scrollbar-width: none;
-        margin-top: 10px;
-        gap: 6px;
-
-        .comment-list-header{
-            width: 100%;
-            height: 30px;
-            /* background-color: #fff; */
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 4px 0;
-            border-bottom: 1px solid #333;
-
-            span{
-                font-size: 14px;
-                color: #fff;
-                font-weight: 600;
-                border-radius: 20px;
-                display: flex;
-                align-items: center;
-                padding: 2px;
-                padding-inline: 20px;
-                background-color: #64635e;
+            &:focus{
+                outline: none;
             }
         }
 
-        .comment{
+        .form-footer{
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            border: 1px solid #2b2b2a;
-            border-radius: 10px;
-            padding: 4px;
-            transition: 0.3s ease;
-            cursor: pointer;
-            height: auto;
 
-            .comment-content-section{
+            button{
+                width: 30px;
+                height: 30px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 8px;
-                min-width: 0;
-
-                .comment-text {
-                    color: #f0efed;
-                    font-size: 14px;
-                    flex: 1;
-                    min-width: 0;
-                    white-space: normal;
-                    overflow-wrap: anywhere;
-                    word-break: break-word;
-                    line-height: 1.4;
-                }                
-            }
-
-            .comment-menu-button{
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                gap: 4px;
-                padding: 6px;
-                font-weight: 400;
-                border-radius: 6px;
-                padding-inline: 6px;
-                border: 1px solid #333;
-                line-height: 1.2;
-                color: #7d7a75;
+                border: 1px solid #303030;
                 background-color: transparent;
-                transition: 0.1s ease;
-                opacity: 0;
-                pointer-events: none;
-                transform: translateY(4px);
-                
+                border-radius: 50%;
+
                 svg{
-                    width: 16px;
-                    height: 16px;
-                    fill: #7d7a75;
-                }
-                &:hover{
-                    background-color: #2c2c2b;
-                }
-            }
-
-            &:hover{
-                background-color: #262626;
-
-                .comment-menu-button {
-                    opacity: 1;
-                    pointer-events: auto;
-                    transform: translateY(0);
+                    width: 24px;
+                    height: 24px;
                 }
             }
         }
+    }
+
+    .comments-list-container{
+        display: flex;
+        align-items: start;
+        flex-direction: row;
+        gap: 20px;
     }
 }

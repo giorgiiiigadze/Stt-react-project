@@ -19,8 +19,8 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <h2 style={{display: 'flex', flexDirection: 'column', marginBottom: '30px'}}>
-          <span style={{color: '#7a7a7aff'}}>Your AI workspace.</span>
-          <span>Log in to your Notion account</span>
+          <span style={{color: '#7a7a7aff'}}>Your Organized Voice.</span>
+          <span>Log in to your account</span>
         </h2>
         
         <div className="social-buttons">

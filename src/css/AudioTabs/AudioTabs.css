@@ -23,8 +23,8 @@
   border-radius: 20px;
 
   span{
-    font-size: 14px;
-    font-weight: 500;
+    font-size: .875rem;
+    font-weight: 600;
   }
 
   svg{

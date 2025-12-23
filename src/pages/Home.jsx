@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import Header from '../components/Header';
+import FilterHeader from '../components/FilterHeader';
+
 import LoginMessage from '../components/LoginMessage';
 
 import AudioBox from '../components/AudioBox';
@@ -28,7 +30,7 @@ export default function Home() {
   return (
     <div className="container">
       <Header />
-
+      <FilterHeader />
       <main className="container-main">
 
         {!user && !userLoading && <LoginMessage />}

@@ -5,7 +5,6 @@ import ProtectedRoute from "./helper/ProtectedRoute";
 import Sidebar from "./components/Sidebar";
 import { SidebarProvider } from "./contexts/SidebarContext";
 import { UserProvider } from "./contexts/UserContext";
-import { TableProvider } from "./contexts/AudioTableContext";
 import { AudioProvider } from "./contexts/AudioContext";
 import { ToastProvider } from "./contexts/MessageContext";
 import { CompletedUserProvider } from "./contexts/CompletedUserContext";
@@ -21,9 +20,10 @@ import NotFound from "./pages/NotFound";
 function Layout() {
   const location = useLocation();
 
+  const noSidebarRoutes = ["/login", "/register"];
+
   const hideSidebar =
-    location.pathname === "/login" ||
-    location.pathname === "/register";
+    noSidebarRoutes.includes(location.pathname);
 
   return (
     <div className="main_container" style={{ display: "flex", minHeight: "100vh" }}>
@@ -85,9 +85,7 @@ export default function App() {
           <AudioProvider>
             <ToastProvider>
               <SidebarProvider>
-                <TableProvider>
                   <Layout />
-                </TableProvider>
               </SidebarProvider>
             </ToastProvider>
           </AudioProvider>

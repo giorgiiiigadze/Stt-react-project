@@ -46,7 +46,7 @@ export default function Sidebar() {
   const [lastAudioCount, setLastAudioCount] = useState(5);
   
   const { user, userLoading, logout } = useUser();
-  const { audios, loading, error, isLoggedIn } = useAudios(user);
+  const { audios, loading, error, removeAudio, isLoggedIn } = useAudios(user);
   const [logginOut, setLoggingOut] = useState(false)
   
   function handleConfrimLogout() {
@@ -59,16 +59,12 @@ export default function Sidebar() {
       navigate("/login", { replace: true });
     }, 600);
   }
-  // Add the return to old state part later
-  // useEffect(() => {
-  //   if (isMobile && isOpen) {
-  //     toggleOpen(false);
-  //   }
-  // }, [isMobile]);
 
   async function handleAudioDelete(audioId) {
     try {
       await deleteAudio(audioId);
+
+      removeAudio(audioId);
       addToast("Audio deleted successfully.", "success");
     } catch (error) {
       console.error("Failed to delete audio:", error);
@@ -200,7 +196,7 @@ export default function Sidebar() {
                   <div className="audios-names-title">
                     <Skeleton
                       width={100}
-                      height={6}
+                      height={7}
                       style={{ borderRadius: '4px' }}
                       baseColor="#292929"
                       highlightColor="#515151ff"
@@ -217,7 +213,7 @@ export default function Sidebar() {
                       /> 
                       <Skeleton
                         width={160}
-                        height={6}
+                        height={7}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -228,7 +224,7 @@ export default function Sidebar() {
                   <div className="audios-names-title">
                       <Skeleton
                         width={100}
-                        height={6}
+                        height={7}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -245,7 +241,7 @@ export default function Sidebar() {
                       /> 
                       <Skeleton
                         width={160}
-                        height={6}
+                        height={7}
                         style={{ borderRadius: '4px' }}
                         baseColor="#292929"
                         highlightColor="#515151ff"
@@ -258,14 +254,14 @@ export default function Sidebar() {
               : error ? (
                 ErrorContainer(error)
               ) : audios.length === 0 ? (
-                <div className="sidebar-link"><span>No audios in {user?.username}s workspace</span></div>
+                <div className="sidebar-link"><span>Your workspace is empty</span></div>
               ) : (
                 <>
                   {audios.filter(audio => audio.favorite).length > 0 &&
                     <>
                       <div className="audios-names-title">
                         <Tooltip title="Your audios name list" placement="left">
-                          <span style={{color: '#fff'}}>Favourited Audios</span>
+                          <span style={{color: '#ffffffb9'}}>Favourited Audios</span>
                         </Tooltip>
                       </div>
                       {audios.filter(audio => audio.favorite).map(audio => (
@@ -312,7 +308,7 @@ export default function Sidebar() {
 
                   <div className="audios-names-title">
                     <Tooltip title="Your audios name list" placement="left">
-                      <span style={{color: '#fff'}}>Uploaded Audios</span>
+                      <span style={{color: '#ffffffb9'}}>Uploaded Audios</span>
                     </Tooltip>
                   </div>
                   {audios.map(audio => (

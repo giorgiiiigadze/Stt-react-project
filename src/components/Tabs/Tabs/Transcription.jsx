@@ -22,6 +22,7 @@ export default function Transcription({ audioId }) {
 
     return (
     !transcription ? (
+
       <EmptyState
         position={'start'}
         marginTop={40}

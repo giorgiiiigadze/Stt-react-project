@@ -67,11 +67,11 @@
     align-items: center;
     width: 100%;
     padding: 0.3rem 10px;
-    font-size: 14px;
+    font-size: 13px;
     gap: 10px;
     border-radius: 6px;
     text-decoration: none;
-    color: #ffffffb9;
+    color: #ffffff83;
     box-sizing: border-box;
     font-weight: 600;
     transition: background-color 0.1s ease;
@@ -89,8 +89,8 @@
     
     svg{
         stroke: lch(61.683 1 272);
-        width: 17px;
-        height: 17px;
+        width: 18px;
+        height: 18px;
         stroke-width: 1.7px;
     }
 }
@@ -106,6 +106,7 @@
 .sidebar-link:hover{
     background-color: #2c2c2c;
 }
+
 .audio-names{
     width: 100%;
     height: auto;
