@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getAudioComments, commentAudio } from "../services/api";
 
+import { delay } from "../helper/Delay";
+
 export function useAudioComments(audioId) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,7 +19,9 @@ export function useAudioComments(audioId) {
     try {
       setLoading(true);
       setError(null);
-
+      
+      // await delay(500);
+      
       const data = await getAudioComments(audioId);
 
       if (requestId !== requestIdRef.current) return;

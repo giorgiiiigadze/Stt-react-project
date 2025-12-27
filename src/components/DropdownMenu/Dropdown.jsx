@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import '../../css/DropdownMenu/Dropdown.css'
 
-export function Dropdown({ trigger, children, align = "left", offset = 6, width }) {
+export function Dropdown({ trigger, children, align = "left", offset = 6, offsetRight = 0, offsetLeft = 0, width }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -27,7 +27,7 @@ export function Dropdown({ trigger, children, align = "left", offset = 6, width 
       {open && (
         <div
           className={`dropdown-menu ${align}`}
-          style={{ marginTop: offset, minWidth: `${width}px`}}
+          style={{ marginTop: offset, minWidth: `${width}px`, marginRight: offsetRight, marginLeft: offsetLeft}}
         >
           {typeof children === "function"
             ? children({ close: () => setOpen(false) })

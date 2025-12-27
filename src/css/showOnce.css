@@ -1,0 +1,136 @@
+.show-once-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.show-once-container {
+    width: 200px;
+    min-width: 200px;
+    height: auto;
+    position: absolute;
+    background: #202020;
+    color: #ffffff;
+    border: 1px solid #303030;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 8px 12px;
+    padding-inline: 10px;
+    border-radius: 8px;
+    max-width: 280px;
+    white-space: normal;
+    z-index: 1000;
+    cursor: pointer;
+    user-select: none;
+    animation: showOnceFadeIn 0.18s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.show-once-btn:hover {
+  text-decoration: underline;
+}
+
+.show-once-container.top {
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.show-once-container.bottom {
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.show-once-container.left {
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.show-once-container.right {
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.show-once-container.top-right {
+  bottom: calc(100% + 10px);
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.show-once-container.top-left {
+  bottom: calc(100% + 10px);
+  left: 0;
+  transform: none;
+}
+
+.show-once-container::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.show-once-container.top::after {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-color: #202020 transparent transparent transparent;
+}
+
+.show-once-container.bottom::after {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent #202020 transparent;
+}
+
+.show-once-container.left::after {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-color: transparent transparent transparent #202020;
+}
+
+.show-once-container.right::after {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px 6px 6px 0;
+  border-color: transparent #202020 transparent transparent;
+}
+
+.show-once-container.top-right::after {
+  top: 100%;
+  right: 16px;
+  border-width: 6px 6px 0 6px;
+  border-color: #202020 transparent transparent transparent;
+}
+
+.show-once-container.top-left::after {
+  top: 100%;
+  left: 16px;
+  border-width: 6px 6px 0 6px;
+  border-color: #202020 transparent transparent transparent;
+}
+
+
+@keyframes showOnceFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

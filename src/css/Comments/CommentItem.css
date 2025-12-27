@@ -4,8 +4,7 @@
     align-items: start;
     flex-direction: column;
     flex-wrap: wrap;
-    border: 1px solid #2b2b2a;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 6px;
     gap: 4px;
     transition: 0.3s ease;
@@ -24,16 +23,19 @@
     .comment-text {
         color: #f0efed;
         font-size: 14px;
+        font-weight: 600;
         flex: 1;
         min-width: 0;
         white-space: normal;
         overflow-wrap: anywhere;
         word-break: break-word;
         line-height: 1.4;
+        outline: none;
     }
     
     .comment-created-at{
         font-size: 12px;
+        font-weight: 600;
         color: #7d7a75;
     }
 
@@ -66,7 +68,6 @@
     }
 
     &:hover{
-        background-color: #262626;
 
         .comment-menu-button {
             opacity: 1;

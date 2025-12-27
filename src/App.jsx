@@ -8,6 +8,7 @@ import { UserProvider } from "./contexts/UserContext";
 import { AudioProvider } from "./contexts/AudioContext";
 import { ToastProvider } from "./contexts/MessageContext";
 import { CompletedUserProvider } from "./contexts/CompletedUserContext";
+import { DisplayProvider } from "./contexts/DisplayContext";
 
 import Home from "./pages/Home";
 import Audios from "./pages/Audios";
@@ -82,13 +83,15 @@ export default function App() {
     <BrowserRouter>
       <UserProvider>
         <CompletedUserProvider>
-          <AudioProvider>
-            <ToastProvider>
-              <SidebarProvider>
-                  <Layout />
-              </SidebarProvider>
-            </ToastProvider>
-          </AudioProvider>
+          <DisplayProvider>
+            <AudioProvider>
+              <ToastProvider>
+                <SidebarProvider>
+                    <Layout />
+                </SidebarProvider>
+              </ToastProvider>
+            </AudioProvider>
+          </DisplayProvider>
         </CompletedUserProvider>
       </UserProvider>
     </BrowserRouter>

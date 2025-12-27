@@ -19,19 +19,16 @@
   justify-content: center;
   margin-bottom: 8px;
 
-  svg{
-    width: 48px;
-    height: 48px;
-  }
 }
 
-.empty-state h3 {
+.empty-state .empty-state-title {
   font-size: 1.2rem;
   font-weight: 700;
   color: #e6e6e6;
+  margin-bottom: 10px;
 }
 
-.empty-state p {
+.empty-state span {
   font-size: .9375rem;
   color: #9a9a9a;
   font-weight: 600;
@@ -43,7 +40,7 @@
   justify-content: center;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 20px;
 
 }
 .primary-btn,
@@ -53,7 +50,7 @@
 
 .primary-btn {
   text-decoration: none;
-  background: #6d7cff;
+  background: #2783de;
   color: #fff;
   padding: 8px 14px;
   border-radius: 8px;
@@ -62,16 +59,13 @@
   cursor: pointer;
 }
 
-.primary-btn:hover {
-  background: #5c6bff;
-}
-
 .secondary-btn {
   padding: 8px 14px;
   border-radius: 8px;
   font-size: 13px;
   color: #9a9a9a;
   text-decoration: none;
+  background-color: transparent;
 }
 
 .secondary-btn:hover {

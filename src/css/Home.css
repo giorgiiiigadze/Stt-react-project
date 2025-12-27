@@ -6,7 +6,7 @@
 }
 
 .container-main{
-  width: clamp(320px, 65%, 800px);
+  width: clamp(320px, 65%, 900px);
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -54,9 +54,65 @@
 .audios-scroll-container {
   display: flex;
   gap: 18px;
+  overflow-x: auto;
+  padding: 4px;
+
   scrollbar-width: none;
-  overflow: auto;
-  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.audios-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.audios-scroll-container.can-scroll-right {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+.audios-scroll-container.can-scroll-left {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 100%
+  );
+}
+
+.audios-scroll-container.can-scroll-both {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
 
 .audio-player-container {

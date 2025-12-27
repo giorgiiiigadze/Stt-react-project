@@ -32,7 +32,7 @@ export default function Sidebar() {
 
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const savedWidth = localStorage.getItem("sidebar_width");
-    return savedWidth ? parseInt(savedWidth) : 600;
+    return savedWidth ? parseInt(savedWidth) : 280;
   });
 
   const { addToast } = useToast()
@@ -63,7 +63,7 @@ export default function Sidebar() {
   async function handleAudioDelete(audioId) {
     try {
       await deleteAudio(audioId);
-
+      navigate('/')
       removeAudio(audioId);
       addToast("Audio deleted successfully.", "success");
     } catch (error) {
@@ -171,7 +171,7 @@ export default function Sidebar() {
           <Tooltip title="Create new audio" placement="left">
             <Link to="/audio_upload" className={`sidebar-link ${location.pathname.startsWith("/audio_upload") ? "active" : ""}`}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-plus-icon lucide-file-plus"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M9 15h6"/><path d="M12 18v-6"/></svg>
-              <span>Create New</span>
+              <span>Upload</span>
             </Link>
           </Tooltip>
           <Tooltip title="Every audio details page" placement="left">

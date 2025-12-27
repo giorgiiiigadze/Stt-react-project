@@ -49,6 +49,9 @@
         }
 
         button{
+            display: flex;
+            align-items: center;
+            /* justify-content: center; */
             border: none;
             background-color: transparent;
             cursor: pointer;
@@ -67,7 +70,7 @@
     align-items: center;
     width: 100%;
     padding: 0.3rem 10px;
-    font-size: 13px;
+    font-size: 14px;
     gap: 10px;
     border-radius: 6px;
     text-decoration: none;
@@ -145,6 +148,8 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
+            border-radius: 10px;
+
             svg{
                 width: 15px;
                 height: 15px;

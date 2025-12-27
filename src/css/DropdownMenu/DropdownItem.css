@@ -1,0 +1,9 @@
+button{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    span{
+        font-size: 14px;
+    }
+}

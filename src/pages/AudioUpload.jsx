@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import Header from '../components/Header';
-import { useToast } from '../contexts/MessageContext';
-import AudioUploadPanel from '../components/Upload/AudioUploadPanel';
 import { uploadAudio } from '../services/api';
+import { useToast } from '../contexts/MessageContext';
+
+import Header from '../components/Header';
+import AudioUploadPanel from '../components/Upload/AudioUploadPanel';
+
+import ShowOnce from '../components/showOnce';
 
 import '../css/AudioUpload.css'
 
@@ -16,14 +19,18 @@ export default function AudioUpload(){
         setTitle(e.target.value);           
     }
 
+    const maxChars = 40
+    const isTitleTooLong = title.length > maxChars;
+
     async function handleUpload() {
         if (!title.trim()) {
         addToast("Please enter a title", "error");
         return;
         }
 
-        if(title.length > 35){
-        addToast("The new audio title must be fewer than 35 characters", 'error')
+
+        if(title.length > maxChars){
+        addToast(`The new audio title must be fewer than ${maxChars} characters`, 'error')
         return
         }
 
@@ -72,6 +79,11 @@ export default function AudioUpload(){
                             onChange={(e) => {
                                 handleTitle(e)
                             }}
+                        style={{
+                                borderBottom: `1px solid ${
+                                    isTitleTooLong ? '#EC5261' : 'transparent'
+                                }`,
+                            }}
                         />
                     </div>
                     <div className="audio-file-upload">
@@ -79,15 +91,22 @@ export default function AudioUpload(){
                     </div>
 
                     <footer className='audio-upload-footer'>
-                        <button className='question-mark-button'>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z"/></svg>
-                        </button> 
-                        <button
-                        className="post-button"
-                        onClick={handleUpload}
-                        disabled={loading}
+                        <ShowOnce
+                            storageKey="send_upload_status_v1"
+                            text='
+                                After uploading your audio, its status will be “Processing”. 
+                                Once transcription is complete, the status will change to “Complete,” 
+                                helping you quickly spot completed audio.
+                            '
+                            position="top"
                         >
-                        {loading ? "Uploading..." : "Upload"}
+                            <button className='question-mark-button'>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z"/></svg>
+                            </button> 
+                        </ShowOnce>
+
+                        <button className="post-button" onClick={handleUpload} disabled={loading}>
+                            {loading ? "Uploading..." : "Upload"}
                         </button>
                     </footer>
                 </main>

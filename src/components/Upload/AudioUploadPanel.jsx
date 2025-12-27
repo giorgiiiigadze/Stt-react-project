@@ -16,8 +16,6 @@ export default function AudioUploadPanel({ onUpload }) {
   const [dragOver, setDragOver] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef(null);
-
-  console.log(file)
   
   const handleClick = () => {
     fileInputRef.current?.click();

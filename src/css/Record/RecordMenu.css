@@ -1,0 +1,178 @@
+.record-wrapper {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 2rem;
+  display: inline-block;
+  z-index: 1000;
+}
+
+.record-button {
+  background-color: var(--record-container-bg);
+  color: white;
+  border: 1px solid #303030;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background 0.15s ease;
+}
+
+.record-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.record-button:hover {
+  background: #181818;
+}
+
+.record-container {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 320px;
+  height: 500px;
+
+  background: #111;
+  color: white;
+
+  border: 1px solid #303030;
+  border-radius: 20px;
+  padding: 12px;
+
+  animation: popIn 0.15s ease-out;
+  transform-origin: bottom right;
+
+  z-index: 1000;
+}
+
+.record-container-header {
+  width: 100%;
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+
+    svg{
+        width: 16px;
+        height: 16px;
+        stroke: #e6e5e3;
+    }
+
+    &:hover{
+      background-color: #2c2c2b;
+    }
+  }
+}
+
+.start-recording-button {
+  width: 56px;
+  height: 56px;
+
+  padding: 0;
+  border-radius: 12px;
+
+  background-color: #111;
+  border: 1px solid #303030;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background 0.15s ease;
+  will-change: transform;
+}
+
+.start-recording-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.start-recording-button:hover {
+  background: #181818;
+}
+
+.start-recording-button.rotating {
+  animation: rotateRecording 4s linear infinite;
+}
+
+.recording-actions{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 4px;
+}
+
+.recording-actions button{
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: 0.2s ease;
+  background-color: transparent;
+
+  &:hover{
+    background-color: #2c2c2b;
+  }
+}
+
+.recording-actions .save-btn{
+  padding-inline: 20px;
+}
+
+
+
+@keyframes rotateRecording {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.waves-container {
+  width: 100%;
+  min-height: 80px;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

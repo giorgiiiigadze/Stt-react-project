@@ -9,7 +9,8 @@ import { DropdownItem } from "../../DropdownMenu/DropdownItem";
 import CommentsList from "../../../assets/Comments/CommentsList";
 import CommentItem from "../../../assets/Comments/CommentItem";
 
-import useMediaQuery from "../../../hooks/MediaQuery";
+import ShowOnce from "../../showOnce";
+
 import "../../../css/AudioTabs/Tabs/Comments.css";
 
 export default function AudioComments({ audioId }) {
@@ -62,7 +63,7 @@ export default function AudioComments({ audioId }) {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Leave a comment.."
+            placeholder="Leave a note/comment.."
             disabled={isSubmitting}
             onInput={(e) => {
               const el = e.target;
@@ -79,30 +80,39 @@ export default function AudioComments({ audioId }) {
             }}
           />
           <div className="form-footer">
-            <button type="submit" disabled={isSubmitting}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24px"
-                viewBox="0 -960 960 960"
-                width="24px"
-                fill={text ? "#e3e3e3" : "#ada9a39a"}
-              >
-                <path d="M440-240v-368L296-464l-56-56 240-240 240 240-56 56-144-144v368h-80Z" />
-              </svg>
-            </button>
+            <ShowOnce
+              storageKey="send_comment_hint_v1"
+              text="Take quick comments and notes to keep track of important moments, ideas, and thoughts from your audios, all in one place for easy review later."
+              position="top"
+            >
+              <button type="submit" disabled={isSubmitting}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill={text ? "#e3e3e3" : "#ada9a39a"}
+                >
+                  <path d="M440-240v-368L296-464l-56-56 240-240 240 240-56 56-144-144v368h-80Z" />
+                </svg>
+              </button>
+            </ShowOnce>
           </div>
+
         </form>
       </header>
       <div className="comments-list-container">
         <CommentsList
           statusFilter="Not started"
           commentListStatus={"Not Started"}
+          commentListColor={'#202020'}
           comments={comments}
           loading={loading}
           renderItem={(comment) => (
             <CommentItem
               key={comment.id}
               comment={comment}
+              commentItemColor={'#202020'}
               DropdownMore={
                 <Dropdown
                   align="left"
@@ -113,6 +123,9 @@ export default function AudioComments({ audioId }) {
                 >
                   {({ close }) => (
                     <>
+                      <DropdownItem onClick={close}>
+                        Edit Comment status
+                      </DropdownItem>
                       <DropdownItem onClick={close}>
                         Edit Comment
                       </DropdownItem>
@@ -136,12 +149,14 @@ export default function AudioComments({ audioId }) {
         <CommentsList
           statusFilter="In Progress"
           commentListStatus={"In Progress"}
+          commentListColor={'#1a2027'}
           comments={comments}
           loading={loading}
           renderItem={(comment) => (
             <CommentItem
               key={comment.id}
               comment={comment}
+              commentItemColor={'#213041'}
               DropdownMore={
                 <Dropdown
                   align="left"
@@ -152,6 +167,10 @@ export default function AudioComments({ audioId }) {
                 >
                   {({ close }) => (
                     <>
+                      <DropdownItem onClick={close}>
+                        Edit Comment status
+                      </DropdownItem>
+
                       <DropdownItem onClick={close}>
                         Edit Comment
                       </DropdownItem>
@@ -175,12 +194,14 @@ export default function AudioComments({ audioId }) {
         <CommentsList
           statusFilter="Done"
           commentListStatus={"Done"}
+          commentListColor={'#1b211d'}
           comments={comments}
           loading={loading}
           renderItem={(comment) => (
             <CommentItem
               key={comment.id}
               comment={comment}
+              commentItemColor={'#24342b'}
               DropdownMore={
                 <Dropdown
                   align="left"
@@ -191,6 +212,10 @@ export default function AudioComments({ audioId }) {
                 >
                   {({ close }) => (
                     <>
+                      <DropdownItem onClick={close}>
+                        Edit Comment status
+                      </DropdownItem>
+
                       <DropdownItem onClick={close}>
                         Edit Comment
                       </DropdownItem>

@@ -6,19 +6,24 @@
     
     .comments-container-header{
         width: 100%;
-        border: 1px solid #303030;
+        /* border: 1px solid #303030; */
         background-color: #202020;
         display: flex;
         align-items: center;
         justify-content: flex-start;
         
-        padding: 10px;
-        border-radius: 8px;
+        border-radius: 10px;
         margin-bottom: 20px;
+    }
+
+    .comments-container-header:focus-within {
+        border-color: rgb(35, 131, 226);
+        box-shadow: 0 0 0 2px rgb(35, 131, 226);
     }
 
     form{
         width: 100%;
+        padding: 10px;
         height: auto;
         display: flex;
         align-items: center;
@@ -36,7 +41,7 @@
             color: #fff;
             resize: none;
             font-size: .9375rem;
-            font-weight: 400;
+            font-weight: 600;
             line-height: 1.6;
 
             &:focus{

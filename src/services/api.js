@@ -4,8 +4,14 @@ export const getAudios = () => {
   return apiRequest("/stt/api/audio/", "GET");
 }
 
-export const getAllTranscriptedAudios = () =>{
+export const getAllTranscriptedAudios = () => {
   return apiRequest(`/transcription/api/transcripted_audios/`)
+}
+
+export const transcribeAudio = (commentId) => {
+  return apiRequest(`/transcription/api/audio/${commentId}/`,
+    'POST'
+  )
 }
 
 export const uploadAudio = (file_title, file) => {
@@ -51,6 +57,22 @@ export const deleteComment = (commentId) => {
   return apiRequest(
     `/stt/api/audio/comment/delete/${commentId}/`,
     'DELETE'
+  )
+}
+
+export const editComment = (commentId, commentContent) => {
+  return apiRequest(
+    `/stt/api/audio/comment/edit/${commentId}/`,
+    'PATCH',
+    {content: commentContent}
+  )
+}
+
+export const updateCommentStatus = (commentAudio, commentStatus) => {
+  return apiRequest(
+    `/stt/api/audio/comment/edit_status/${commentAudio}/`,
+    'PATCH',
+    { comment_status: commentStatus }
   )
 }
 
