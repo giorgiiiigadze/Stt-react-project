@@ -7,8 +7,18 @@
   z-index: 1000;
 }
 
+.record-backdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* background-color: rgba(0, 0, 0, 0.096); */
+  z-index: 999;
+}
+
 .record-button {
-  background-color: var(--record-container-bg);
+  background-color: #0e0e0e;
   color: white;
   border: 1px solid #303030;
   border-radius: 10px;
@@ -46,11 +56,12 @@
   width: 320px;
   height: 500px;
 
-  background: #111;
+  /* background: var(--sidebar-bg) ; */
+  background-color: #0e0e0e;
   color: white;
 
   border: 1px solid #303030;
-  border-radius: 20px;
+  border-radius: 14px;
   padding: 12px;
 
   animation: popIn 0.15s ease-out;
@@ -96,9 +107,10 @@
   height: 56px;
 
   padding: 0;
-  border-radius: 12px;
+  border-radius: 10px;
 
-  background-color: #111;
+  background-color: var(--sidebar-bg);
+  /* background-color: #1c1c1c; */
   border: 1px solid #303030;
   cursor: pointer;
 
@@ -147,10 +159,19 @@
 }
 
 .recording-actions .save-btn{
+  background-color: transparent;
+  color: #2783de;
+  border: 1px solid #2783de;
+  padding: 8px 14px;
   padding-inline: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &:hover{
+    background-color: #2783de7e;
+  }
 }
-
-
 
 @keyframes rotateRecording {
   from {

@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Audios from "./pages/Audios";
 import AudioDetails from "./pages/AudioDetails";
 import AudioUpload from "./pages/AudioUpload";
+import RecordAudioPage from "./pages/RecordAudio";
 import Login from "./pages/registration/Login";
 import Register from "./pages/registration/Register";
 import NotFound from "./pages/NotFound";
@@ -21,7 +22,7 @@ import NotFound from "./pages/NotFound";
 function Layout() {
   const location = useLocation();
 
-  const noSidebarRoutes = ["/login", "/register"];
+  const noSidebarRoutes = ["/login", "/register", "/record_audio"];
 
   const hideSidebar =
     noSidebarRoutes.includes(location.pathname);
@@ -64,6 +65,14 @@ function Layout() {
             element={
               <ProtectedRoute>
                 <AudioUpload />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/record_audio"
+            element={
+              <ProtectedRoute>
+                <RecordAudioPage />
               </ProtectedRoute>
             }
           />

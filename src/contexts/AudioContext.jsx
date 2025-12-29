@@ -34,20 +34,16 @@ export function AudioProvider({ children }) {
 
       try {
         await delay(500);
-
         const audiosData = await getAudios();
         if (!mounted) return;
-
         setAudios(audiosData);
       } catch (err) {
         if (!mounted) return;
-
         setError(
           err?.status === 429
             ? "Way too many requests were sent"
             : "Something went wrong while loading audios"
         );
-
         setLoading(false);
         return;
       }
@@ -55,13 +51,7 @@ export function AudioProvider({ children }) {
       try {
         const transcriptionData = await getAllTranscriptedAudios();
         if (!mounted) return;
-
-        if (!Array.isArray(transcriptionData) || transcriptionData.length === 0) {
-          setTranscriptions([]);
-          return;
-        }
-
-        setTranscriptions(transcriptionData);
+        setTranscriptions(Array.isArray(transcriptionData) ? transcriptionData : []);
       } catch {
         if (!mounted) return;
         setTranscriptions([]);
@@ -77,11 +67,18 @@ export function AudioProvider({ children }) {
     };
   }, [isLoggedIn, userLoading]);
 
+  function addTranscription(newTranscription) {
+    setTranscriptions(prev => {
+      const exists = prev.some(t => t.id === newTranscription.id);
+      if (exists) return prev;
+      return [...prev, newTranscription];
+    });
+  }
 
   function removeAudio(audioId) {
     setAudios(prev => prev.filter(audio => audio.id !== audioId));
     setTranscriptions(prev =>
-      prev.filter(t => t.audio_id !== audioId)
+      prev.filter(t => t.audio !== audioId)
     );
   }
 
@@ -108,6 +105,7 @@ export function AudioProvider({ children }) {
         removeAudio,
         updateAudio,
         addAudio,
+        addTranscription,
       }}
     >
       {children}

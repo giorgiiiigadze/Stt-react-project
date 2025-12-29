@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { uploadAudio } from '../services/api';
 import { useToast } from '../contexts/MessageContext';
 
@@ -10,13 +13,21 @@ import ShowOnce from '../components/showOnce';
 import '../css/AudioUpload.css'
 
 export default function AudioUpload(){
+    const location = useLocation();
+    const navigate = useNavigate();
+    
     const [title, setTitle] = useState('')
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(
+        location.state?.recordedFile || null
+    );
+
+
     const { addToast } = useToast()
+
     const [loading, setLoading] = useState(false);
 
     function handleTitle(e){
-        setTitle(e.target.value);           
+        setTitle(e.target.value);
     }
 
     const maxChars = 40
@@ -24,27 +35,26 @@ export default function AudioUpload(){
 
     async function handleUpload() {
         if (!title.trim()) {
-        addToast("Please enter a title", "error");
-        return;
+         addToast("Please enter a title", "error");
+         return;
         }
 
-
         if(title.length > maxChars){
-        addToast(`The new audio title must be fewer than ${maxChars} characters`, 'error')
-        return
+          addToast(`The new audio title must be fewer than ${maxChars} characters`, 'error')
+          return
         }
 
         if (!file) {
-        addToast("Please select an audio file", "error");
-        return;
+            addToast("Please select an audio file", "error");
+            return;
         }
-
 
         try {
             setLoading(true);
             await uploadAudio(title, file);
             addToast("Audio uploaded successfully", "success");
 
+            navigate('/')
             setTitle('');
             setFile(null);
         } catch (err) {

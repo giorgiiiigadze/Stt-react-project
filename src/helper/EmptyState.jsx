@@ -45,7 +45,7 @@ export default function EmptyState({
             ) : primaryOnClick ? (
               <button
                 type="button"
-                className="primary-btn"
+                className="primary-empty-state-btn"
                 onClick={primaryOnClick}
               >
                 {primaryText}

@@ -95,19 +95,27 @@ export const getCompletedUser = () =>
   apiRequest("/users/api/completed_profile/", "GET")
 
 
-export const registerUser = (username, email, password, confirm_password) => {
-  return apiRequest(
-    "/users/api/register/",
-    "POST",
-    {
-      username,
-      email,
-      password,
-      confirm_password,
-    }
-  );
+export const registerUser = async (
+  username,
+  email,
+  password,
+  confirm_password
+) => {
+  try {
+    return await apiRequest(
+      "/users/api/register/",
+      "POST",
+      {
+        username,
+        email,
+        password,
+        confirm_password,
+      }
+    );
+  } catch (error) {
+    throw error;
+  }
 };
-
 
 export const loginUser = (username, password) => {
   return apiRequest(

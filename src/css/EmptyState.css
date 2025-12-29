@@ -43,12 +43,12 @@
   margin-top: 20px;
 
 }
-.primary-btn,
+.primary-empty-state-btn,
 .secondary-btn {
   border: 1px solid #303030;
 }
 
-.primary-btn {
+.primary-empty-state-btn {
   text-decoration: none;
   background: #2783de;
   color: #fff;

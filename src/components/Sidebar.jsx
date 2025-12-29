@@ -174,6 +174,15 @@ export default function Sidebar() {
               <span>Upload</span>
             </Link>
           </Tooltip>
+          <Tooltip title="Record new audio" placement="left">
+            <Link to="/record_audio" className={`sidebar-link ${location.pathname.startsWith("/audios") ? "active" : ""}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="10" cy="10" r="4" fill="currentColor" />
+              </svg>
+              <span>Audios</span>
+            </Link>
+          </Tooltip>
           <Tooltip title="Every audio details page" placement="left">
             <Link to="/audios" className={`sidebar-link ${location.pathname.startsWith("/audios") ? "active" : ""}`}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-audio-lines-icon lucide-audio-lines"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>

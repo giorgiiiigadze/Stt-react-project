@@ -1,16 +1,40 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import { useAudios } from "../../../contexts/AudioContext";
+import { useTranscription } from "../../../hooks/UseTranscription";
 
 import EmptyState from "../../../helper/EmptyState";
 import ConfirmDialog from "../../Dialog/ConfrimDialog";
 
+import TranscriptionSkeletons from "../../TranscriptionSkeletons";
+
 import "../../../css/AudioTabs/Tabs/Transcription.css";
-import { useState } from "react";
 
 export default function Transcription({ audioId }) {
-  const { transcriptions, loading, error } = useAudios();
+  const { transcriptions, loading, error, addTranscription } = useAudios();
 
   const [transcriptionDialog, setTranscriptionDialog] = useState(false)
+  const { startTranscription, loading: transcribing, error: transcriptionError, result } = useTranscription();
+
+  async function handleGenerate() {
+    try {
+      const data = await startTranscription(audioId);
+
+      addTranscription({
+        id: data.transcription_id,
+        audio: data.audio_id,
+        transcribed_text: data.transcribed_text,
+        transcription_tag: data.transcription_tag,
+        transcripted: data.transcripted,
+      });
+
+      setTranscriptionDialog(false);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 
   if (loading) {
     return <p className="transcription-loading">Loading transcription...</p>;
@@ -24,27 +48,45 @@ export default function Transcription({ audioId }) {
     t => String(t.audio) === String(audioId)
   );
 
-    return (
-    <>
-    {transcriptionDialog &&
+return (
+  <>
+    {transcriptionDialog && (
       <ConfirmDialog
-            open={transcriptionDialog}
-            title="Generate transcription?"
-            description="This will generate a transcription for this audio using automatic speech recognition. The process may take a few moments."
-            confirmText="Generate transcription"
-            cancelText="Cancel"
-            danger
-            onConfirm={() => console.log("Confrim")}
-            onCancel={() => setTranscriptionDialog(false)}
-          />    
-    }
+        open={transcriptionDialog}
+        title="Generate transcription?"
+        description="This will generate a transcription for this audio using automatic speech recognition."
+        confirmText={transcribing ? "Generating..." : "Generate transcription"}
+        cancelText="Cancel"
+        danger
+        onConfirm={() => {
+          handleGenerate()
+          setTranscriptionDialog(false)
+        }}
+        onCancel={() => setTranscriptionDialog(false)}
+      />
+    )}
 
-      {!transcription ? (
+    {transcription && (
+      <div className="transcription-container">
+        <div className="transcription-item">
+          <div className="transcription-label">Transcription tag</div>
+          <div className="transcription-tag">
+            {transcription.transcription_tag}
+          </div>
+          {transcription.transcribed_text}
+        </div>
+      </div>
+    )}
 
-        <EmptyState
-          position={'start'}
-          marginTop={40}
-          svg={(
+    {!transcription && transcribing && (
+      <TranscriptionSkeletons />
+    )}
+
+    {!transcription && !transcribing && (
+      <EmptyState
+        position="start"
+        marginTop={40}
+        svg={(
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width='130px'
@@ -175,28 +217,17 @@ export default function Transcription({ audioId }) {
                 </clipPath>
               </defs>
             </svg>
-          )}
-          title="No transcription yet"
-          description="This audio hasn’t been transcribed yet. Start a transcription to turn
-          speech into searchable, editable text you can review and improve anytime."
-          primaryText="Generate transcription"
-          secondaryText="How transcription works"
-          primaryOnClick={() => setTranscriptionDialog(true)}
+        )}
+        title="No transcription yet"
+        description="This audio hasn’t been transcribed yet. Start a transcription to turn speech into searchable, editable text you can review and improve anytime."
+        primaryText="Generate transcription"
+        secondaryText="How transcription works"
+        primaryOnClick={() => setTranscriptionDialog(true)}
+        secondaryLink="/audio_upload"
+      />
+    )}
+  </>
+);
 
-          secondaryLink={'/audio_upload'}
-        />
-      ) : (
-          <div className="transcription-container">
-          <div className="transcription-item">
-              <div className="transcription-label">Transcription tag</div>
-              <div className="transcription-tag">
-                {transcription.transcription_tag}
-              </div>
-              {transcription.transcribed_text}
-          </div>
-          </div>
-      )}
-    </>
-    );
 
 }
