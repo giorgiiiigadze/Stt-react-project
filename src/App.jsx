@@ -11,7 +11,6 @@ import { CompletedUserProvider } from "./contexts/CompletedUserContext";
 import { DisplayProvider } from "./contexts/DisplayContext";
 
 import Home from "./pages/Home";
-import Audios from "./pages/Audios";
 import AudioDetails from "./pages/AudioDetails";
 import AudioUpload from "./pages/AudioUpload";
 import RecordAudioPage from "./pages/RecordAudio";
@@ -41,16 +40,7 @@ function Layout() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/audios"
-            element={
-              <ProtectedRoute>
-                <Audios />
-              </ProtectedRoute>
-            }
-          />
-
+          
           <Route
             path="/audio/:id"
             element={

@@ -15,8 +15,6 @@ export default function EmptyState({
   secondaryText,
   secondaryLink,
   secondaryOnClick,
-
-  icon
 }) {
   return (
     <div
@@ -29,7 +27,7 @@ export default function EmptyState({
       <div className="empty-state-inner">
 
         <div className="empty-icon">
-          {icon || svg}
+          {svg}
         </div>
 
         <div className='empty-state-title'>{title}</div>
@@ -39,13 +37,13 @@ export default function EmptyState({
 
           {primaryText && (
             primaryLink ? (
-              <Link to={primaryLink} className="primary-btn">
+              <Link to={primaryLink} className="primary-empty-btn">
                 {primaryText}
               </Link>
             ) : primaryOnClick ? (
               <button
                 type="button"
-                className="primary-empty-state-btn"
+                className="primary-empty-btn"
                 onClick={primaryOnClick}
               >
                 {primaryText}

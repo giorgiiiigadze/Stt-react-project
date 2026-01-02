@@ -23,8 +23,10 @@
   border-radius: 20px;
 
   span{
-    font-size: .875rem;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   }
 
   svg{

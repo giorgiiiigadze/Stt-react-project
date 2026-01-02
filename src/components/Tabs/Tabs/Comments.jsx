@@ -1,45 +1,60 @@
-import { useState, useRef, Activity } from "react";
-import { useAudioComments } from "../../../hooks/useAudioComments";
+import { useState, useRef, useEffect } from 'react';
+import { useAudioComments } from '../../../hooks/useAudioComments';
+import { useUser } from '../../../contexts/UserContext';
 import { deleteComment as deleteCommentAPI } from "../../../services/api";
-import { useToast } from "../../../contexts/MessageContext";
+import { useToast } from '../../../contexts/MessageContext';
 
-import { Dropdown } from "../../DropdownMenu/Dropdown";
-import { DropdownItem } from "../../DropdownMenu/DropdownItem";
+import CommentStatus from '../../CommentStatus';
 
-import CommentsList from "../../../assets/Comments/CommentsList";
-import CommentItem from "../../../assets/Comments/CommentItem";
+import { DropdownItem } from '../../DropdownMenu/DropdownItem'
+import {Dropdown} from '../../DropdownMenu/Dropdown'
 
-import ShowOnce from "../../showOnce";
+import ShowOnce from '../../showOnce'
 
-import "../../../css/AudioTabs/Tabs/Comments.css";
+import ProfilePicture from '../../Profile/Pfp';
+
+import '../../../css/AudioTabs/Tabs/Comments.css';
 
 export default function AudioComments({ audioId }) {
   const [text, setText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { user, userLoading } = useUser();
   const { comments, addComment, removeComment, loading } = useAudioComments(audioId);
-  const { addToast } = useToast();
+
+  const { addToast } = useToast()
+
+  const textareaRef = useRef(null);
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e?.preventDefault();
     if (isSubmitting) return;
 
     if (!text.trim()) {
-      addToast("Comment can't be empty", "error");
+      addToast("Comment can't be empty", 'error');
+      return;
+    }
+
+    if (text.length > 500) {
+      addToast("Comment must have fewer characters than 500", 'error');
       return;
     }
 
     try {
       setIsSubmitting(true);
       await addComment(text);
-      setText("");
-      addToast("Comment added", "success");
+      setText('');
+
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+      addToast('Comment added', 'success');
     } catch (err) {
       addToast(
         err?.response?.status === 429
-          ? "Way too many comments. Try again later."
-          : "Failed to add comment",
-        "error"
+          ? 'Way too many comments. Try again later.'
+          : 'Failed to add comment',
+        'error'
       );
     } finally {
       setIsSubmitting(false);
@@ -56,188 +71,153 @@ export default function AudioComments({ audioId }) {
     }
   }
 
+  function timeAgo(date) {
+    const diff = Math.floor((Date.now() - new Date(date)) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  }
+
+
   return (
     <div className="comments-container">
-      <header className="comments-container-header">
-        <form onSubmit={handleSubmit} className="comment-form">
+      <div className="comments">
+        <div className="comment-textarea">
+          <div className="comments-textarea-input">
           <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            className="textarea-input"
             placeholder="Leave a note/comment.."
+            value={text}
+            ref={textareaRef}
             disabled={isSubmitting}
-            onInput={(e) => {
-              const el = e.target;
-              el.style.height = "auto";
-              el.style.height = `${el.scrollHeight}px`;
+            rows={1}
+            onChange={(e) => {
+              setText(e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = `${e.target.scrollHeight}px`;
             }}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+              if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                if (!isSubmitting && text.trim()) {
-                  handleSubmit(e);
-                }
+                handleSubmit(e);
               }
             }}
           />
-          <div className="form-footer">
+
+          </div>
+          <div className="comments-textarea-actions">
             <ShowOnce
-              storageKey="send_comment_hint_v1"
-              text="Take quick comments and notes to keep track of important moments, ideas, and thoughts from your audios, all in one place for easy review later."
-              position="top"
-            >
-              <button type="submit" disabled={isSubmitting}>
+                storageKey="audio_comments_upload_v1"
+                text='
+                        Change the volume of your voice while
+                        recording audio to find the perfect balance 
+                        and make sure your recording is clear and easy to understand.
+                    '
+                position="top"
+            ></ShowOnce>
+              <button className="submit-button" onClick={handleSubmit}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                  fill={text ? "#e3e3e3" : "#ada9a39a"}
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <path d="M440-240v-368L296-464l-56-56 240-240 240 240-56 56-144-144v368h-80Z" />
+                  <path d="m5 12 7-7 7 7" />
+                  <path d="M12 19V5" />
                 </svg>
               </button>
-            </ShowOnce>
           </div>
+        </div>
 
-        </form>
-      </header>
-      <div className="comments-list-container">
-        <CommentsList
-          statusFilter="Not started"
-          commentListStatus={"Not Started"}
-          commentListColor={'#202020'}
-          comments={comments}
-          loading={loading}
-          renderItem={(comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              commentItemColor={'#202020'}
-              DropdownMore={
-                <Dropdown
-                  align="left"
-                  width={200}
-                  trigger={() => (
-                    <button className="comment-menu-button">•••</button>
-                  )}
-                >
-                  {({ close }) => (
-                    <>
-                      <DropdownItem onClick={close}>
-                        Edit Comment status
-                      </DropdownItem>
-                      <DropdownItem onClick={close}>
-                        Edit Comment
-                      </DropdownItem>
-
-                      <DropdownItem
-                        danger
-                        onClick={() => {
-                          close();
-                          handleDelete(comment.id);
-                        }}
-                      >
-                        Delete Comment
-                      </DropdownItem>
-                    </>
-                  )}
-                </Dropdown>
-              }
-            />
+        <div className="comments-list">
+          {loading && (
+            <div className="comment muted">Loading comments…</div>
           )}
-        />
-        <CommentsList
-          statusFilter="In Progress"
-          commentListStatus={"In Progress"}
-          commentListColor={'#1a2027'}
-          comments={comments}
-          loading={loading}
-          renderItem={(comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              commentItemColor={'#213041'}
-              DropdownMore={
-                <Dropdown
-                  align="left"
-                  width={200}
-                  trigger={() => (
-                    <button className="comment-menu-button">•••</button>
-                  )}
-                >
-                  {({ close }) => (
-                    <>
-                      <DropdownItem onClick={close}>
-                        Edit Comment status
-                      </DropdownItem>
 
-                      <DropdownItem onClick={close}>
-                        Edit Comment
-                      </DropdownItem>
-
-                      <DropdownItem
-                        danger
-                        onClick={() => {
-                          close();
-                          handleDelete(comment.id);
-                        }}
-                      >
-                        Delete Comment
-                      </DropdownItem>
-                    </>
-                  )}
-                </Dropdown>
-              }
-            />
+          {!loading && comments.length === 0 && (
+            <div className="comment muted">
+              No comments yet — add the first one
+            </div>
           )}
-        /> 
-        <CommentsList
-          statusFilter="Done"
-          commentListStatus={"Done"}
-          commentListColor={'#1b211d'}
-          comments={comments}
-          loading={loading}
-          renderItem={(comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              commentItemColor={'#24342b'}
-              DropdownMore={
-                <Dropdown
-                  align="left"
-                  width={200}
-                  trigger={() => (
-                    <button className="comment-menu-button">•••</button>
-                  )}
-                >
-                  {({ close }) => (
-                    <>
-                      <DropdownItem onClick={close}>
-                        Edit Comment status
-                      </DropdownItem>
 
-                      <DropdownItem onClick={close}>
-                        Edit Comment
-                      </DropdownItem>
+          {!loading &&
+            comments.map((comment) => (
+              <div className="comment" key={comment.id}>
+                <div className="comment-header">
+                  <div className="comment-profile">
+                    <ProfilePicture padding={10} borderRadius={4} />
+                    <span>{userLoading ? "Loading..." : `${user?.username}`}</span>
+                    <span className='date-span'>
+                      {timeAgo(comment.created_at)}
+                    </span>
+                  </div>
+                  <div className='audio-edit-actions'>
+                    <CommentStatus status={comment.status} padding={8}/>
+                    <Dropdown
+                      align="right"
+                      width={200}
+                      trigger={() => (
+                      <button
+                        className="comment-more-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-icon lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                      </button>
+                      )}
+                    >
+                      {({ close }) => (
+                        <>
+                          <DropdownItem
+                            danger
+                            onClick={() => {
+                              close();
+                              handleDelete(comment.id);
+                            }}
+                          >
+                            Delete Comment
+                          </DropdownItem>
+                        </>
+                      )}
+                    </Dropdown>
+                  </div>
+                </div>
 
-                      <DropdownItem
-                        danger
-                        onClick={() => {
-                          close();
-                          handleDelete(comment.id);
-                        }}
-                      >
-                        Delete Comment
-                      </DropdownItem>
-                    </>
-                  )}
-                </Dropdown>
-              }
-            />
-          )}
-        />     
+                <div className="comments-content">
+                  <div className="content">
+                    <span>{comment.content}</span>
+                  </div>
+                </div>
+                
+                <footer className="comment-footer">
+
+                </footer>
+              </div>
+            ))}
+        </div>
       </div>
 
+      <div className="comments-sidebar">
+        <div className="sidebar-box">
+          <h4>Comments</h4>
+          <span>{comments.length} total</span>
+        </div>
+
+        <div className="sidebar-box">
+          <button
+            onClick={() =>
+              document
+                .querySelector('.comments-list')
+                ?.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+          >
+            Jump to top
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

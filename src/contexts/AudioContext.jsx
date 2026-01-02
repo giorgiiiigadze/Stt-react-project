@@ -33,7 +33,7 @@ export function AudioProvider({ children }) {
       setError(null);
 
       try {
-        await delay(500);
+        await delay(3000);
         const audiosData = await getAudios();
         if (!mounted) return;
         setAudios(audiosData);
@@ -51,7 +51,9 @@ export function AudioProvider({ children }) {
       try {
         const transcriptionData = await getAllTranscriptedAudios();
         if (!mounted) return;
-        setTranscriptions(Array.isArray(transcriptionData) ? transcriptionData : []);
+        setTranscriptions(
+          Array.isArray(transcriptionData) ? transcriptionData : []
+        );
       } catch {
         if (!mounted) return;
         setTranscriptions([]);
@@ -67,10 +69,30 @@ export function AudioProvider({ children }) {
     };
   }, [isLoggedIn, userLoading]);
 
+  async function fetchTranscriptions() {
+    if (!isLoggedIn) return;
+
+    try {
+      const transcriptionData = await getAllTranscriptedAudios();
+      setTranscriptions(
+        Array.isArray(transcriptionData) ? transcriptionData : []
+      );
+    } catch {
+      // silent fail (don’t kill UI while polling)
+    }
+  }
   function addTranscription(newTranscription) {
     setTranscriptions(prev => {
-      const exists = prev.some(t => t.id === newTranscription.id);
-      if (exists) return prev;
+      const exists = prev.find(t => t.id === newTranscription.id);
+
+      if (exists) {
+        return prev.map(t =>
+          t.id === newTranscription.id
+            ? { ...t, ...newTranscription }
+            : t
+        );
+      }
+
       return [...prev, newTranscription];
     });
   }
@@ -106,6 +128,7 @@ export function AudioProvider({ children }) {
         updateAudio,
         addAudio,
         addTranscription,
+        fetchTranscriptions,
       }}
     >
       {children}

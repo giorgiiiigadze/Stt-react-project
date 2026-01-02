@@ -45,7 +45,7 @@ export default function AudioUpload(){
         }
 
         if (!file) {
-            addToast("Please select an audio file", "error");
+            addToast("Please select a valid audio file.", "error");
             return;
         }
 

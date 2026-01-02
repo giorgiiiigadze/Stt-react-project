@@ -1,6 +1,82 @@
-.transcription-container{
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
+.transcription-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.transcription-container .transcription-item {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #2b2b2b;
+  max-height: 600px;
+}
+
+.transcription-container .transcription-tag {
+  color: #fff;
+  border-bottom: 1px solid #303030;
+  padding: 4px;
+}
+
+.transcription-container .transcription-tag > span {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.transcription-container .transcription-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 6px;
+  font-size: 14px;
+}
+
+.transcription-container .detail-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transcription-container .detail-label {
+    color: #ffffff83;
+    font-size: 14px;
+    border-radius: 6px;
+    padding: 4px;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover{
+        background-color: #262626;
+    }
+}
+
+.transcription-container .detail-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.transcription-container .detail-badge.language {
+  background: #24342b;
+  color: #386c4e;
+}
+
+.transcription-container .transcription-text {
+  width: 100%;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  font-size: 14px;
+  resize: none;
+  font-weight: 500;
+  all: unset; 
 }

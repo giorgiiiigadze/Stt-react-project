@@ -23,7 +23,7 @@ export default function AudioUploadPanel({ onUpload }) {
 
   const validateFile = (file) => {
     if (!ALLOWED_AUDIO_TYPES.includes(file.type)) {
-      return "Only audio files are allowed";
+      return "Please select a valid audio file.";
     }
 
     const sizeMB = file.size / (1024 * 1024);

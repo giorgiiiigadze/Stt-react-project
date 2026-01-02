@@ -18,13 +18,12 @@
   display: flex;
   justify-content: center;
   margin-bottom: 8px;
-
 }
 
 .empty-state .empty-state-title {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #e6e6e6;
+  color: #ffffff83;
   margin-bottom: 10px;
 }
 
@@ -48,7 +47,7 @@
   border: 1px solid #303030;
 }
 
-.primary-empty-state-btn {
+.primary-empty-btn {
   text-decoration: none;
   background: #2783de;
   color: #fff;

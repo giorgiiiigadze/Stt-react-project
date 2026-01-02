@@ -2,6 +2,8 @@ import '../css/Home.css'
 import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
+import Loading from '../components/LoadingComponent';
+
 import Header from '../components/Header';
 import FilterHeader from '../components/FilterHeader';
 
@@ -94,15 +96,7 @@ export default function Home() {
           {isLoggedIn && (
             <>
               {loading && (
-                <div className='upper-text-container'>
-                  <Skeleton 
-                    width={200} 
-                    height={8}
-                    style={{ borderRadius: '22px' }}
-                    baseColor="#292929"
-                    highlightColor="#515151ff"
-                  />
-                </div>
+                <Loading />
               )}
 
               {!loading && error && ErrorContainer(error)}
